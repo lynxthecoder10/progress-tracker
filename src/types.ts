@@ -1,42 +1,89 @@
-export type Role = "admin" | "lead" | "member";
+export type AppRole = "admin" | "member";
 export type ReportStatus = "submitted" | "approved" | "needs_work";
-export type TaskStatus = "todo" | "in_progress" | "blocked" | "done";
-export type TaskType = "learning" | "build" | "team" | "hackathon";
-export type SubmissionStatus = "idea" | "building" | "submitted" | "shipped";
+export type TaskStatus = "todo" | "in_progress" | "done";
+export type TaskPriority = "low" | "medium" | "high";
+export type SkillLevel = "beginner" | "intermediate" | "advanced" | "production_ready";
+export type WarningLevel = 1 | 2 | 3;
+export type ResourceCategory = "fundamentals" | "frontend" | "backend" | "database" | "design" | "hackathon" | "tooling";
+export type ViewId = "dashboard" | "reports" | "leaderboard" | "warnings" | "resources" | "tasks";
 
-export type Profile = {
+export type UserProfile = {
   id: string;
-  name: string;
+  display_name: string;
   email: string;
-  role: Role;
-  skills: string[];
-  warning_count: number;
-  streak: number;
-  contribution_score: number;
+  role: AppRole;
   learning_track: string;
+  avatar_url: string | null;
   github_url: string | null;
-  portfolio_url: string | null;
-  hours_learned: number;
-  tasks_completed: number;
-  projects_shipped: number;
-  bugs_solved: number;
-  apis_integrated: number;
-  github_commits: number;
-  attendance_rate: number;
-  team_help_score: number;
-  created_at?: string;
-  updated_at?: string;
+  warning_count: number;
+  responsibility_level: string;
+  joined_at: string;
+  updated_at: string;
 };
 
 export type WeeklyReport = {
   id: string;
   user_id: string;
+  week_start: string;
   learned: string;
-  built: string;
+  shipped: string;
   blockers: string;
-  next_goal: string;
+  next_week_goal: string;
+  hours_spent: number;
   status: ReportStatus;
   submitted_at: string;
+  reviewed_at: string | null;
+  reviewed_by: string | null;
+};
+
+export type LeaderboardStat = {
+  id: string;
+  user_id: string;
+  xp: number;
+  level: number;
+  current_streak: number;
+  longest_streak: number;
+  consistency_score: number;
+  contribution_score: number;
+  weekly_reports_count: number;
+  tasks_completed: number;
+  resources_shared: number;
+  growth_rate: number;
+  activity_score: number;
+  badges: string[];
+  updated_at: string;
+};
+
+export type WarningEntry = {
+  id: string;
+  user_id: string;
+  issued_by: string | null;
+  level: WarningLevel;
+  reason: string;
+  resolved: boolean;
+  created_at: string;
+  resolved_at: string | null;
+};
+
+export type Resource = {
+  id: string;
+  title: string;
+  description: string;
+  category: ResourceCategory;
+  url: string | null;
+  storage_path: string | null;
+  tags: string[];
+  uploaded_by: string;
+  created_at: string;
+};
+
+export type Skill = {
+  id: string;
+  user_id: string;
+  name: string;
+  level: SkillLevel;
+  focus_area: string;
+  updated_at: string;
 };
 
 export type TaskItem = {
@@ -46,50 +93,19 @@ export type TaskItem = {
   assigned_to: string | null;
   created_by: string | null;
   status: TaskStatus;
-  task_type: TaskType;
-  deadline: string;
-  created_at?: string;
-};
-
-export type Resource = {
-  id: string;
-  title: string;
-  category: string;
-  uploaded_by: string;
-  link: string;
-  tags: string[];
-  upvotes: number;
+  priority: TaskPriority;
+  due_at: string | null;
+  completed_at: string | null;
   created_at: string;
-};
-
-export type Hackathon = {
-  id: string;
-  title: string;
-  starts_at: string;
-  deadline: string;
-  team_members: string[];
-  roles_needed: string[];
-  idea: string;
-  project_status: string;
-  submission_status: SubmissionStatus;
-  created_at?: string;
-};
-
-export type WarningEntry = {
-  id: string;
-  user_id: string;
-  issued_by: string | null;
-  reason: string;
-  level: 1 | 2 | 3;
-  resolved: boolean;
-  created_at: string;
+  updated_at: string;
 };
 
 export type TrackerData = {
-  profiles: Profile[];
+  users: UserProfile[];
   weeklyReports: WeeklyReport[];
-  tasks: TaskItem[];
-  resources: Resource[];
-  hackathons: Hackathon[];
+  leaderboardStats: LeaderboardStat[];
   warnings: WarningEntry[];
+  resources: Resource[];
+  skills: Skill[];
+  tasks: TaskItem[];
 };

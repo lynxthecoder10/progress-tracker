@@ -1,0 +1,61 @@
+0 verbose cli C:\Program Files\nodejs\node.exe C:\Program Files\nodejs\node_modules\npm\bin\npm-cli.js
+1 info using npm@11.6.2
+2 info using node@v25.2.1
+3 silly config load:file:C:\Program Files\nodejs\node_modules\npm\npmrc
+4 silly config load:file:E:\Progress tracker\.npmrc
+5 silly config load:file:C:\Users\tejas\.npmrc
+6 silly config load:file:C:\Users\tejas\AppData\Roaming\npm\etc\npmrc
+7 verbose title npm install
+8 verbose argv "install" "--cache" ".npm-cache" "--no-audit" "--no-fund"
+9 verbose logfile logs-max:10 dir:E:\Progress tracker\.npm-cache\_logs\2026-05-08T18_20_49_802Z-
+10 verbose logfile E:\Progress tracker\.npm-cache\_logs\2026-05-08T18_20_49_802Z-debug-0.log
+11 silly logfile done cleaning log files
+12 silly packumentCache heap:2348810240 maxSize:587202560 maxEntrySize:293601280
+13 http fetch GET https://registry.npmjs.org/npm attempt 1 failed with EACCES
+14 silly idealTree buildDeps
+15 silly fetch manifest @supabase/supabase-js@^2.102.0
+16 silly packumentCache full:https://registry.npmjs.org/@supabase%2fsupabase-js cache-miss
+17 http fetch GET https://registry.npmjs.org/@supabase%2fsupabase-js attempt 1 failed with EACCES
+18 http fetch GET https://registry.npmjs.org/npm attempt 2 failed with EACCES
+19 http fetch GET https://registry.npmjs.org/@supabase%2fsupabase-js attempt 2 failed with EACCES
+20 http fetch GET https://registry.npmjs.org/npm attempt 3 failed with EACCES
+21 http fetch GET https://registry.npmjs.org/@supabase%2fsupabase-js attempt 3 failed with EACCES
+22 silly fetch manifest framer-motion@^12.0.0
+23 silly packumentCache full:https://registry.npmjs.org/framer-motion cache-miss
+24 http fetch GET https://registry.npmjs.org/framer-motion attempt 1 failed with EACCES
+25 http fetch GET https://registry.npmjs.org/framer-motion attempt 2 failed with EACCES
+26 http fetch GET https://registry.npmjs.org/framer-motion attempt 3 failed with EACCES
+27 silly fetch manifest react@^19.0.0
+28 silly packumentCache full:https://registry.npmjs.org/react cache-miss
+29 http fetch GET https://registry.npmjs.org/react attempt 1 failed with EACCES
+30 http fetch GET https://registry.npmjs.org/react attempt 2 failed with EACCES
+31 http fetch GET https://registry.npmjs.org/react attempt 3 failed with EACCES
+32 silly fetch manifest react-dom@^19.0.0
+33 silly packumentCache full:https://registry.npmjs.org/react-dom cache-miss
+34 http fetch GET https://registry.npmjs.org/react-dom attempt 1 failed with EACCES
+35 http fetch GET https://registry.npmjs.org/react-dom attempt 2 failed with EACCES
+36 http fetch GET https://registry.npmjs.org/react-dom attempt 3 failed with EACCES
+37 silly fetch manifest @tailwindcss/vite@^4.0.0
+38 silly packumentCache full:https://registry.npmjs.org/@tailwindcss%2fvite cache-miss
+39 http fetch GET https://registry.npmjs.org/@tailwindcss%2fvite attempt 1 failed with EACCES
+40 http fetch GET https://registry.npmjs.org/@tailwindcss%2fvite attempt 2 failed with EACCES
+41 http fetch GET https://registry.npmjs.org/@tailwindcss%2fvite attempt 3 failed with EACCES
+42 silly fetch manifest @types/react@^19.0.0
+43 silly packumentCache full:https://registry.npmjs.org/@types%2freact cache-miss
+44 http fetch GET https://registry.npmjs.org/@types%2freact attempt 1 failed with EACCES
+45 http fetch GET https://registry.npmjs.org/@types%2freact attempt 2 failed with EACCES
+46 http fetch GET https://registry.npmjs.org/@types%2freact attempt 3 failed with EACCES
+47 silly fetch manifest @types/react-dom@^19.0.0
+48 silly packumentCache full:https://registry.npmjs.org/@types%2freact-dom cache-miss
+49 http fetch GET https://registry.npmjs.org/@types%2freact-dom attempt 1 failed with EACCES
+50 http fetch GET https://registry.npmjs.org/@types%2freact-dom attempt 2 failed with EACCES
+51 http fetch GET https://registry.npmjs.org/@types%2freact-dom attempt 3 failed with EACCES
+52 silly fetch manifest @vitejs/plugin-react@^5.0.0
+53 silly packumentCache full:https://registry.npmjs.org/@vitejs%2fplugin-react cache-miss
+54 http fetch GET https://registry.npmjs.org/@vitejs%2fplugin-react attempt 1 failed with EACCES
+55 http fetch GET https://registry.npmjs.org/@vitejs%2fplugin-react attempt 2 failed with EACCES
+56 http fetch GET https://registry.npmjs.org/@vitejs%2fplugin-react attempt 3 failed with EACCES
+57 silly fetch manifest tailwindcss@^4.0.0
+58 silly packumentCache full:https://registry.npmjs.org/tailwindcss cache-miss
+59 http fetch GET https://registry.npmjs.org/tailwindcss attempt 1 failed with EACCES
+60 http fetch GET https://registry.npmjs.org/tailwindcss attempt 2 failed with EACCES

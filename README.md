@@ -416,3 +416,48 @@ This project can become:
 - A hackathon-winning product
 - A startup foundation
 - Your team’s operating system
+
+---
+
+## Implementation Notes
+
+This repository now includes the Phase 1 MVP scaffold:
+
+- React + Vite + TypeScript app shell
+- Tailwind CSS styling
+- Supabase client with persistent sessions
+- Demo workspace fallback
+- Dashboard, weekly reports, leaderboard, resources, tasks, hackathon, and admin screens
+- Supabase SQL setup with RLS and a private `member-resources` storage bucket
+- Netlify static deployment config
+
+### Local Development
+
+```bash
+npm install
+npm run dev
+```
+
+Create `.env.local` from `.env.example`:
+
+```bash
+VITE_SUPABASE_URL=https://your-project.supabase.co
+VITE_SUPABASE_PUBLISHABLE_KEY=sb_publishable_...
+VITE_ENABLE_DEMO_DATA=true
+```
+
+### Supabase Setup
+
+Apply `supabase/migrations/001_initial_schema.sql` in the Supabase SQL editor or convert it into a timestamped Supabase CLI migration. Enable email/password auth in the Supabase dashboard before inviting members.
+
+### Netlify Deploy
+
+Netlify uses:
+
+```toml
+[build]
+command = "npm run build"
+publish = "dist"
+```
+
+Set `VITE_SUPABASE_URL`, `VITE_SUPABASE_PUBLISHABLE_KEY`, and `VITE_ENABLE_DEMO_DATA` in Netlify environment variables.

@@ -1,8 +1,8 @@
 import { useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { LockKeyhole, ShieldCheck } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { motion } from "framer-motion";
+import { LockKeyhole, ShieldCheck } from "../../components/icons";
 import { Button } from "../../components/ui/button";
 import { Card, CardContent } from "../../components/ui/card";
 import { Field, Input } from "../../components/ui/field";

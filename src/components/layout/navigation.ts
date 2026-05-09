@@ -1,4 +1,4 @@
-import { BarChart3, ClipboardList, Flame, Gauge, Library, ShieldAlert, Trophy } from "lucide-react";
+import { BarChart3, ClipboardList, Flame, Gauge, Library, ShieldAlert, Trophy } from "../icons";
 import type { ViewId } from "../../types";
 
 export const navigationItems: Array<{ id: ViewId; label: string; icon: typeof Gauge }> = [

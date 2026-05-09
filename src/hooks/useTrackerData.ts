@@ -58,8 +58,9 @@ export function useTrackerData(userId: string | null, forceDemo: boolean) {
 
   useEffect(() => {
     if (!supabase || !isLive) return;
+    const client = supabase;
 
-    const channel = supabase
+    const channel = client
       .channel("progress-tracker-core")
       .on("postgres_changes", { event: "*", schema: "public", table: "weekly_reports" }, () => void loadLiveData())
       .on("postgres_changes", { event: "*", schema: "public", table: "leaderboard_stats" }, () => void loadLiveData())
@@ -69,13 +70,13 @@ export function useTrackerData(userId: string | null, forceDemo: boolean) {
       .subscribe();
 
     return () => {
-      void supabase.removeChannel(channel);
+      void client.removeChannel(channel);
     };
   }, [isLive, loadLiveData]);
 
   const currentUser = useMemo(
-    () => data.users.find((user) => user.id === userId) ?? data.users[0] ?? null,
-    [data.users, userId]
+    () => data.users.find((user) => user.id === userId) ?? (forceDemo ? data.users[0] ?? null : null),
+    [data.users, forceDemo, userId]
   );
 
   const submitWeeklyReport = useCallback(
@@ -129,6 +130,8 @@ export function useTrackerData(userId: string | null, forceDemo: boolean) {
           setError(uploadError.message);
           return;
         }
+      } else if (file) {
+        storagePath = `${userId}/${sanitizeFileName(file.name)}`;
       }
 
       const payload = {

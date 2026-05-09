@@ -1,6 +1,6 @@
 import type { ReactNode } from "react";
-import { LogOut, Menu, X } from "lucide-react";
 import { AnimatePresence, motion } from "framer-motion";
+import { LogOut, Menu, X } from "../icons";
 import { Button } from "../ui/button";
 import { Badge } from "../ui/badge";
 import { Select } from "../ui/field";

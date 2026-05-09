@@ -1,5 +1,5 @@
 import { Bar, BarChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
-import { Award, CheckCircle2, Flame, Gauge, Library, ShieldAlert } from "lucide-react";
+import { Award, Flame, Gauge, Library, ShieldAlert } from "../../components/icons";
 import { Badge } from "../../components/ui/badge";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "../../components/ui/card";
 import { Progress } from "../../components/ui/progress";

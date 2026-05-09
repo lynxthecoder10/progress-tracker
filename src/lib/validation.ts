@@ -11,7 +11,7 @@ export const weeklyReportSchema = z.object({
   shipped: z.string().trim().min(8, "List a concrete output"),
   blockers: z.string().trim().max(800).optional().or(z.literal("")),
   next_week_goal: z.string().trim().min(8, "Set a specific next goal"),
-  hours_spent: z.coerce.number().min(0).max(120)
+  hours_spent: z.number().min(0).max(120)
 });
 
 export const resourceSchema = z.object({
@@ -24,7 +24,7 @@ export const resourceSchema = z.object({
 
 export const warningSchema = z.object({
   user_id: z.string().min(1, "Choose a member"),
-  level: z.coerce.number().min(1).max(3),
+  level: z.union([z.literal(1), z.literal(2), z.literal(3)]),
   reason: z.string().trim().min(10, "Explain the discipline issue").max(500)
 });
 

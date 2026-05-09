@@ -31,7 +31,7 @@ export function emptyStatsFor(userId: string): LeaderboardStat {
   };
 }
 
-export function getDisciplineStatus(warnings: WarningEntry[], user: UserProfile) {
+export function getDisciplineStatus(warnings: WarningEntry[], user: UserProfile): RankedMember["discipline"] {
   const activeMax = warnings
     .filter((warning) => warning.user_id === user.id && !warning.resolved)
     .reduce((max, warning) => Math.max(max, warning.level), user.warning_count);

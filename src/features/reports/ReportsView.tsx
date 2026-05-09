@@ -1,6 +1,6 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Send } from "lucide-react";
 import { useForm } from "react-hook-form";
+import { Send } from "../../components/icons";
 import { Badge } from "../../components/ui/badge";
 import { Button } from "../../components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "../../components/ui/card";
@@ -97,7 +97,7 @@ function ReportForm({ onSubmitReport }: { onSubmitReport: (values: WeeklyReportV
             <Textarea {...register("next_week_goal")} />
           </Field>
           <Field label="Hours spent" error={errors.hours_spent?.message}>
-            <Input type="number" min={0} max={120} step={0.5} {...register("hours_spent")} />
+            <Input type="number" min={0} max={120} step={0.5} {...register("hours_spent", { valueAsNumber: true })} />
           </Field>
           <Button type="submit" disabled={isSubmitting}>
             <Send className="h-4 w-4" />

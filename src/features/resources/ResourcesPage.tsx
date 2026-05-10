@@ -24,7 +24,7 @@ type ResourceFormValues = z.infer<typeof resourceSchema>;
 export const ResourcesPage: React.FC = () => {
   const { user } = useAuthStore();
   const { addToast } = useAppStore();
-  const { awardXp } = useGamification();
+  const { awardPoints } = useGamification();
   const [resources, setResources] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState('all');
@@ -72,8 +72,8 @@ export const ResourcesPage: React.FC = () => {
         throw error;
       }
 
-      await awardXp(XP_VALUES.RESOURCE_SHARED, 'Shared a new resource');
-      addToast('Resource shared! +15 XP', 'success');
+      await awardPoints(XP_VALUES.RESOURCE_SHARED, 'both', 'Shared a new resource');
+      addToast('Resource shared! +15 XP & +15 Contribution', 'success');
       reset();
       setShowAddForm(false);
       fetchResources();

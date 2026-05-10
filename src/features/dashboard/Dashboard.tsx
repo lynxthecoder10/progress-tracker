@@ -4,7 +4,7 @@ import { Leaderboard } from './Leaderboard';
 import { QuizWidget } from '../quizzes/QuizWidget';
 import { WarningsWidget } from './WarningsWidget';
 import { motion } from 'framer-motion';
-import { Zap, Flame, Shield, User, ChevronRight, Star } from 'lucide-react';
+import { Zap, Flame, Shield, User, ChevronRight, Star, Heart, HandHeart } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 export const Dashboard: React.FC = () => {
@@ -33,13 +33,16 @@ export const Dashboard: React.FC = () => {
       shadow: 'shadow-green-500/20'
     },
     { 
-      label: 'Global Rank', 
-      value: '#1', 
-      icon: Zap, 
-      color: 'from-purple-500 to-pink-400',
-      shadow: 'shadow-purple-500/20'
+      label: 'Contribution', 
+      value: profile?.contribution_points || 0, 
+      icon: Heart, 
+      color: 'from-pink-500 to-rose-400',
+      shadow: 'shadow-pink-500/20'
     },
   ];
+
+  // Also import Heart from lucide-react if needed
+
 
   return (
     <div className="p-4 md:p-8 space-y-10">

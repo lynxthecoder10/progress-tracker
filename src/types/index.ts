@@ -7,6 +7,7 @@ export interface UserProfile {
   xp: number;
   streak: number;
   trust_score: number;
+  contribution_points: number;
   github_username: string | null;
   created_at: string;
 }

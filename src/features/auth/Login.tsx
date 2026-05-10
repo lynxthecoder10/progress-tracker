@@ -9,9 +9,11 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../..
 export const Login: React.FC = () => {
   const { user, profile } = useAuthStore();
   const navigate = useNavigate();
+  const [isRegistering, setIsRegistering] = useState(false);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
+  const [success, setSuccess] = useState('');
   const [loading, setLoading] = useState(false);
 
   // Redirect if already logged in and profile is loaded
@@ -25,6 +27,7 @@ export const Login: React.FC = () => {
     e.preventDefault();
     setLoading(true);
     setError('');
+    setSuccess('');
 
     const { error } = await supabase.auth.signInWithPassword({
       email,
@@ -35,15 +38,35 @@ export const Login: React.FC = () => {
       setError(error.message);
       setLoading(false);
     } else {
-      // The onAuthStateChange in App.tsx will handle the state update
-      // but we can trigger a manual navigation to speed things up
       navigate('/');
+    }
+  };
+
+  const handleRegister = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setLoading(true);
+    setError('');
+    setSuccess('');
+
+    const { error } = await supabase.auth.signUp({
+      email,
+      password,
+    });
+
+    if (error) {
+      setError(error.message);
+      setLoading(false);
+    } else {
+      setSuccess('Registration successful! Please check your email for confirmation.');
+      setLoading(false);
+      // Wait a bit then switch to login
+      setTimeout(() => setIsRegistering(false), 3000);
     }
   };
 
   return (
     <div className="flex min-h-screen items-center justify-center bg-[#09090b] text-white p-4 relative overflow-hidden">
-      {/* Decorative background elements for premium feel */}
+      {/* Decorative background elements */}
       <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-blue-500/20 blur-[120px] rounded-full pointer-events-none" />
       <div className="absolute bottom-[-10%] right-[-10%] w-[30%] h-[30%] bg-purple-500/20 blur-[100px] rounded-full pointer-events-none" />
       
@@ -51,11 +74,11 @@ export const Login: React.FC = () => {
         <CardHeader className="space-y-1 text-center">
           <CardTitle className="text-3xl font-bold tracking-tight text-white">ProgressTracker</CardTitle>
           <CardDescription className="text-gray-400">
-            Sign in to your team account
+            {isRegistering ? 'Create your team account' : 'Sign in to your team account'}
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <form onSubmit={handleLogin} className="space-y-4">
+          <form onSubmit={isRegistering ? handleRegister : handleLogin} className="space-y-4">
             <div className="space-y-2">
               <Input
                 type="email"
@@ -74,15 +97,31 @@ export const Login: React.FC = () => {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 required
-                autoComplete="current-password"
+                autoComplete={isRegistering ? "new-password" : "current-password"}
                 className="bg-white/5 border-white/10 text-white placeholder:text-gray-500"
               />
             </div>
+            
             {error && <p className="text-sm text-red-500 font-medium">{error}</p>}
+            {success && <p className="text-sm text-green-500 font-medium">{success}</p>}
+            
             <Button type="submit" className="w-full font-semibold bg-blue-600 hover:bg-blue-700 text-white" disabled={loading}>
-              {loading ? 'Signing in...' : 'Sign In'}
+              {loading ? (isRegistering ? 'Registering...' : 'Signing in...') : (isRegistering ? 'Register' : 'Sign In')}
             </Button>
           </form>
+
+          <div className="mt-6 text-center">
+            <button 
+              onClick={() => {
+                setIsRegistering(!isRegistering);
+                setError('');
+                setSuccess('');
+              }}
+              className="text-sm text-gray-400 hover:text-white transition-colors"
+            >
+              {isRegistering ? 'Already have an account? Sign In' : "Don't have an account? Register"}
+            </button>
+          </div>
         </CardContent>
       </Card>
     </div>

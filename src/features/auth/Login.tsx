@@ -1,15 +1,25 @@
 import React, { useState } from 'react';
 import { useAuthStore } from '../../store/authStore';
 import { supabase } from '../../lib/supabase';
+import { useNavigate } from 'react-router-dom';
 import { Button } from '../../components/ui/Button';
 import { Input } from '../../components/ui/Input';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../../components/ui/Card';
 
 export const Login: React.FC = () => {
+  const { user, profile } = useAuthStore();
+  const navigate = useNavigate();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+
+  // Redirect if already logged in and profile is loaded
+  React.useEffect(() => {
+    if (user && profile) {
+      navigate('/');
+    }
+  }, [user, profile, navigate]);
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -23,8 +33,12 @@ export const Login: React.FC = () => {
 
     if (error) {
       setError(error.message);
+      setLoading(false);
+    } else {
+      // The onAuthStateChange in App.tsx will handle the state update
+      // but we can trigger a manual navigation to speed things up
+      navigate('/');
     }
-    setLoading(false);
   };
 
   return (
@@ -49,6 +63,7 @@ export const Login: React.FC = () => {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
+                autocomplete="email"
                 className="bg-white/5 border-white/10 text-white placeholder:text-gray-500"
               />
             </div>
@@ -59,6 +74,7 @@ export const Login: React.FC = () => {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 required
+                autocomplete="current-password"
                 className="bg-white/5 border-white/10 text-white placeholder:text-gray-500"
               />
             </div>

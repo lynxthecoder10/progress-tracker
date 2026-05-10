@@ -100,7 +100,7 @@ export const QuizWidget: React.FC = () => {
     setLoading(false);
   };
 
-  };
+
 
   const handleAnswer = async (index: number) => {
     if (answered || !currentQuestion || !user || !quiz) return;

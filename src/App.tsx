@@ -84,7 +84,7 @@ function App() {
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </MainLayout>
-      <ToastContainer position="bottom-right" theme="dark" />
+      <ToastContainer />
     </BrowserRouter>
   );
 }

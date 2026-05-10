@@ -9,6 +9,7 @@ import { ReportsPage } from './features/reports/ReportsPage';
 import { WeeklyReportForm } from './features/reports/WeeklyReportForm';
 import { ResourcesPage } from './features/resources/ResourcesPage';
 import { AdminDashboard } from './features/admin/AdminDashboard';
+import { ProfilePage } from './features/profile/ProfilePage';
 import { ToastContainer } from './components/ui/Toast';
 import { MainLayout } from './components/layout/MainLayout';
 
@@ -83,6 +84,7 @@ function App() {
           <Route path="/reports" element={<ProtectedRoute><ReportsPage /></ProtectedRoute>} />
           <Route path="/resources" element={<ProtectedRoute><ResourcesPage /></ProtectedRoute>} />
           <Route path="/admin" element={<ProtectedRoute><AdminDashboard /></ProtectedRoute>} />
+          <Route path="/profile" element={<ProtectedRoute><ProfilePage /></ProtectedRoute>} />
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </MainLayout>

@@ -175,9 +175,12 @@ export const Navbar: React.FC = () => {
                 </p>
               </div>
             </div>
-            <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-white/10 to-white/5 border border-white/10 flex items-center justify-center shadow-inner group cursor-pointer hover:border-amber-500/50 transition-all">
+            <Link 
+              to="/profile"
+              className="w-12 h-12 rounded-2xl bg-gradient-to-br from-white/10 to-white/5 border border-white/10 flex items-center justify-center shadow-inner group cursor-pointer hover:border-amber-500/50 transition-all"
+            >
                <User size={24} className="text-gray-400 group-hover:text-amber-400 transition-colors" />
-            </div>
+            </Link>
             <button 
               onClick={handleSignOut}
               className="p-3 rounded-2xl bg-red-500/10 border border-red-500/10 text-red-500 hover:bg-red-500 hover:text-white transition-all shadow-lg shadow-red-500/5"

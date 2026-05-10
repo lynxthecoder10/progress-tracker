@@ -21,8 +21,26 @@ export function useGamification() {
   useEffect(() => {
     if (profile) {
       setLocalStats(profile.xp, profile.streak);
+      // Auto-unlock Genesis badge if not already done
+      unlockBadge('genesis');
+      // Check for streak mastery
+      if (profile.streak >= 7) unlockBadge('streak_master');
     }
   }, [profile, setLocalStats]);
+
+  const unlockBadge = async (type: string) => {
+    if (!user) return;
+    
+    // Check if already has it (ignore error if already exists due to UNIQUE constraint)
+    const { error } = await supabase
+      .from('user_badges')
+      .insert({ user_id: user.id, badge_type: type });
+      
+    if (!error) {
+      // Potentially show a toast or notification
+      console.log(`Unlocked badge: ${type}`);
+    }
+  };
 
   // Award XP and optionally Contribution Points
   const awardPoints = async (amount: number, type: 'xp' | 'contribution' | 'both', reason: string) => {
@@ -31,9 +49,15 @@ export function useGamification() {
     const updates: any = {};
     if (type === 'xp' || type === 'both') {
       updates.xp = (profile.xp || 0) + amount;
+      
+      // Check for rank-based badges
+      const newXp = updates.xp;
+      if (newXp >= 1500) unlockBadge('climber');
+      if (newXp >= 10000) unlockBadge('supreme');
     }
     if (type === 'contribution' || type === 'both') {
       updates.contribution_points = (profile.contribution_points || 0) + amount;
+      if (updates.contribution_points >= 1) unlockBadge('contributor');
     }
     
     // Update local state first
@@ -58,5 +82,5 @@ export function useGamification() {
   // Legacy awardXp wrapper
   const awardXp = (amount: number, reason: string) => awardPoints(amount, 'xp', reason);
 
-  return { awardPoints, awardXp };
+  return { awardPoints, awardXp, unlockBadge };
 }

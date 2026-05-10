@@ -100,6 +100,8 @@ export const QuizWidget: React.FC = () => {
     setLoading(false);
   };
 
+  const { awardXp, unlockBadge } = useGamification();
+
   const handleAnswer = async (index: number) => {
     if (answered || !currentQuestion || !user || !quiz) return;
 
@@ -110,7 +112,12 @@ export const QuizWidget: React.FC = () => {
     setIsCorrect(correct);
 
     if (correct) {
-      setDailyCount(prev => prev + 1);
+      setDailyCount(prev => {
+        const next = prev + 1;
+        if (next >= 1) unlockBadge('quiz_novice');
+        if (next >= 5) unlockBadge('quiz_whiz');
+        return next;
+      });
     }
 
     // Record attempt

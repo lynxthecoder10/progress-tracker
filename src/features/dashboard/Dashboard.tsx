@@ -49,9 +49,9 @@ export const Dashboard: React.FC = () => {
   return (
     <div className="p-4 md:p-8 space-y-10">
       {/* Welcome Banner */}
-      <section className="relative overflow-hidden rounded-[2.5rem] bg-gradient-to-br from-purple-700 to-indigo-900 p-8 md:p-12 text-white shadow-2xl">
+      <section className="relative overflow-hidden rounded-[2.5rem] bg-gradient-to-br from-amber-700 to-orange-900 p-8 md:p-12 text-white shadow-2xl">
         <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 blur-3xl rounded-full -translate-y-1/2 translate-x-1/2" />
-        <div className="absolute bottom-0 left-0 w-48 h-48 bg-blue-400/20 blur-3xl rounded-full translate-y-1/2 -translate-x-1/2" />
+        <div className="absolute bottom-0 left-0 w-48 h-48 bg-amber-400/20 blur-3xl rounded-full translate-y-1/2 -translate-x-1/2" />
         
         <div className="relative z-10 flex flex-col md:flex-row items-center justify-between gap-8">
           <div className="space-y-4 text-center md:text-left">
@@ -61,10 +61,10 @@ export const Dashboard: React.FC = () => {
               className="space-y-4"
             >
               <div className={`inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/10 border border-white/10 backdrop-blur-md text-[10px] font-black uppercase tracking-[0.2em] ${getRankColor(profile?.xp || 0)}`}>
-                <Zap size={12} /> {getRankTitle(profile?.xp || 0)}
+                <Hammer size={12} /> {getRankTitle(profile?.xp || 0)}
               </div>
               <h1 className="text-4xl md:text-5xl font-black tracking-tight leading-tight">
-                Welcome to <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-300 to-indigo-200">RankChaser</span>
+                Welcome to <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-300 to-orange-200">RankForge</span>
               </h1>
               <p className="mt-2 text-lg text-purple-100/80 max-w-md font-medium">
                 You're currently a <span className="text-white font-bold">{getRankTitle(profile?.xp || 0)}</span>. Climb to <span className="text-white font-bold">Supremacy</span>!

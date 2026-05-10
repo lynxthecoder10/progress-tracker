@@ -22,10 +22,10 @@ export const getRankTitle = (xp: number) => {
 };
 
 export const getRankColor = (xp: number) => {
-  if (xp >= 10000) return 'text-yellow-500';
-  if (xp >= 5000) return 'text-purple-500';
-  if (xp >= 3000) return 'text-blue-500';
-  if (xp >= 1500) return 'text-green-500';
-  if (xp >= 500) return 'text-orange-500';
-  return 'text-gray-500';
+  if (xp >= 10000) return 'text-amber-400 font-black drop-shadow-[0_0_8px_rgba(251,191,36,0.4)]';
+  if (xp >= 5000) return 'text-orange-400 font-bold';
+  if (xp >= 3000) return 'text-yellow-500 font-bold';
+  if (xp >= 1500) return 'text-amber-600';
+  if (xp >= 500) return 'text-orange-600';
+  return 'text-gray-400';
 };

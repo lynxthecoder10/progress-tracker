@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { LayoutDashboard, BookOpen, FileText, LogOut, User, Bell, ShieldCheck, CheckCircle, AlertTriangle, Zap } from 'lucide-react';
+import { LayoutDashboard, BookOpen, FileText, LogOut, User, Bell, ShieldCheck, CheckCircle, AlertTriangle, Zap, Hammer } from 'lucide-react';
 import { useAuthStore } from '../../store/authStore';
 import { supabase } from '../../lib/supabase';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -82,11 +82,11 @@ export const Navbar: React.FC = () => {
             }}
             className="flex items-center gap-2 group cursor-pointer"
           >
-            <div className="w-10 h-10 bg-gradient-to-tr from-purple-600 to-indigo-600 rounded-xl flex items-center justify-center shadow-lg shadow-purple-600/20 group-hover:scale-110 transition-transform duration-300">
-              <Zap size={22} className="text-white" />
+            <div className="w-10 h-10 bg-gradient-to-tr from-amber-600 to-orange-600 rounded-xl flex items-center justify-center shadow-lg shadow-amber-600/20 group-hover:scale-110 transition-transform duration-300">
+              <Hammer size={22} className="text-white" />
             </div>
             <span className="text-2xl font-black tracking-tighter text-white">
-              Rank<span className="text-purple-500">Chaser</span>
+              Rank<span className="text-amber-500">Forge</span>
             </span>
           </div>
           
@@ -230,7 +230,7 @@ export const Navbar: React.FC = () => {
           className="cursor-pointer"
         >
           <span className="text-xl font-black tracking-tighter text-white">
-            Progress<span className="text-blue-500">Tracker</span>
+            Rank<span className="text-amber-500">Forge</span>
           </span>
         </div>
         <div className="w-10 h-10 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center">

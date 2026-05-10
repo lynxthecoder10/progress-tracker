@@ -28,10 +28,10 @@ export default defineConfig({
       registerType: "autoUpdate",
       includeAssets: ["pwa-icon.svg"],
       manifest: {
-        name: "RankChaser",
-        short_name: "RankChaser",
+        name: "RankForge",
+        short_name: "RankForge",
         description: "Premium gamified progress tracking for elite hackathon teams.",
-        theme_color: "#7c3aed",
+        theme_color: "#d97706",
         background_color: "#09090b",
         display: "standalone",
         scope: "/",

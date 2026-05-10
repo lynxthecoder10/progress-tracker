@@ -26,7 +26,7 @@ export default defineConfig({
     tailwindcss(),
     VitePWA({
       registerType: "autoUpdate",
-      includeAssets: ["pwa-icon.svg"],
+      includeAssets: ["pwa-icon.png"],
       manifest: {
         name: "RankForge",
         short_name: "RankForge",
@@ -38,10 +38,10 @@ export default defineConfig({
         start_url: "/",
         icons: [
           {
-            src: "/pwa-icon.svg",
-            sizes: "192x192 512x512",
-            type: "image/svg+xml",
-            purpose: "any maskable"
+            src: "/pwa-icon.png",
+            sizes: "512x512",
+            type: "image/png",
+            purpose: "any"
           }
         ]
       },

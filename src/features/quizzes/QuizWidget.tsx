@@ -126,7 +126,7 @@ export const QuizWidget: React.FC = () => {
           </div>
           <h3 className="text-xl font-black text-white">Master Status Achieved!</h3>
           <p className="text-gray-500 text-sm max-w-[240px] mx-auto font-medium">You've cleared all available technical challenges for now. Check back tomorrow for new quests!</p>
-        </button>
+        </CardContent>
       </Card>
     );
   }

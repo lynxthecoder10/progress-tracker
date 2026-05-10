@@ -12,8 +12,9 @@ export const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children }) => {
 
   if (isLoading) {
     return (
-      <div className="flex h-screen w-screen items-center justify-center bg-background">
-        <div className="h-8 w-8 animate-spin rounded-full border-4 border-primary border-t-transparent"></div>
+      <div className="flex flex-col h-screen w-screen items-center justify-center bg-[#09090b] text-white">
+        <div className="h-8 w-8 animate-spin rounded-full border-4 border-blue-500 border-t-transparent mb-4"></div>
+        <p className="text-sm font-medium animate-pulse">Initializing ProgressTracker...</p>
       </div>
     );
   }

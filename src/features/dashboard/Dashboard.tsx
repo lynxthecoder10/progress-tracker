@@ -2,6 +2,10 @@ import React from 'react';
 import { useAuthStore } from '../../store/authStore';
 import { supabase } from '../../lib/supabase';
 import { Button } from '../../components/ui/Button';
+import { Leaderboard } from './Leaderboard';
+import { QuizWidget } from '../quizzes/QuizWidget';
+import { WarningsWidget } from './WarningsWidget';
+import { motion } from 'framer-motion';
 
 export const Dashboard: React.FC = () => {
   const { profile, logout } = useAuthStore();
@@ -13,7 +17,11 @@ export const Dashboard: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-background p-6">
-      <div className="mx-auto max-w-6xl space-y-6">
+      <motion.div 
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        className="mx-auto max-w-6xl space-y-6"
+      >
         <header className="flex items-center justify-between">
           <div>
             <h1 className="text-3xl font-bold tracking-tight">Dashboard</h1>
@@ -41,7 +49,17 @@ export const Dashboard: React.FC = () => {
             <p className="mt-2 text-3xl font-bold capitalize">{profile?.role || 'Member'}</p>
           </div>
         </div>
-      </div>
+
+        {/* Gamification Components */}
+        <div className="grid gap-6 md:grid-cols-2">
+          <Leaderboard />
+          
+          <div className="space-y-6 mt-6 md:mt-0">
+             <QuizWidget />
+             <WarningsWidget />
+          </div>
+        </div>
+      </motion.div>
     </div>
   );
 };

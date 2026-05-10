@@ -5,6 +5,8 @@ import * as z from 'zod';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '../../lib/supabase';
 import { useAuthStore } from '../../store/authStore';
+import { useAppStore } from '../../store/appStore';
+import { useGamification, XP_VALUES } from '../../hooks/useGamification';
 import { Button } from '../../components/ui/Button';
 import { Input } from '../../components/ui/Input';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../../components/ui/Card';
@@ -24,6 +26,8 @@ type DailyReportFormValues = z.infer<typeof dailyReportSchema>;
 
 export const DailyReportForm: React.FC = () => {
   const { user } = useAuthStore();
+  const { addToast } = useAppStore();
+  const { awardXp } = useGamification();
   const navigate = useNavigate();
   const [submitError, setSubmitError] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -76,13 +80,12 @@ export const DailyReportForm: React.FC = () => {
         throw error;
       }
 
-      // Add to local XP and redirect
-      // In a real app we'd have a DB trigger/function handle XP updates 
-      // securely and update the frontend state accordingly.
-      
+      await awardXp(XP_VALUES.DAILY_REPORT, 'Daily report submitted');
+      addToast('Daily report submitted! +50 XP', 'success');
       navigate('/');
     } catch (err: any) {
       setSubmitError(err.message || 'Failed to submit report');
+      addToast(err.message || 'Failed to submit report', 'error');
     } finally {
       setIsSubmitting(false);
     }

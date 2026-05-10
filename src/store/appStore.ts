@@ -10,6 +10,11 @@ interface AppState {
   localStreak: number | null;
   setLocalStats: (xp: number, streak: number) => void;
   addLocalXp: (amount: number) => void;
+
+  // Toast notifications
+  toasts: { id: string; message: string; type: 'success' | 'error' }[];
+  addToast: (message: string, type: 'success' | 'error') => void;
+  removeToast: (id: string) => void;
 }
 
 export const useAppStore = create<AppState>((set) => ({
@@ -22,5 +27,13 @@ export const useAppStore = create<AppState>((set) => ({
   setLocalStats: (xp, streak) => set({ localXp: xp, localStreak: streak }),
   addLocalXp: (amount) => set((state) => ({ 
     localXp: state.localXp !== null ? state.localXp + amount : null 
+  })),
+
+  toasts: [],
+  addToast: (message, type) => set((state) => ({
+    toasts: [...state.toasts, { id: Math.random().toString(36).substring(2, 9), message, type }]
+  })),
+  removeToast: (id) => set((state) => ({
+    toasts: state.toasts.filter((t) => t.id !== id)
   })),
 }));

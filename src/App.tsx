@@ -7,6 +7,8 @@ import { Dashboard } from './features/dashboard/Dashboard';
 import { ProtectedRoute } from './components/ProtectedRoute';
 import { DailyReportForm } from './features/reports/DailyReportForm';
 import { WeeklyReportForm } from './features/reports/WeeklyReportForm';
+import { ResourcesPage } from './features/resources/ResourcesPage';
+import { ToastContainer } from './components/ui/Toast';
 
 function App() {
   const { setUser, setProfile, setLoading } = useAuthStore();
@@ -70,10 +72,16 @@ function App() {
             <WeeklyReportForm />
           </ProtectedRoute>
         } />
+        <Route path="/resources" element={
+          <ProtectedRoute>
+            <ResourcesPage />
+          </ProtectedRoute>
+        } />
         
         {/* Catch all */}
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
+      <ToastContainer />
     </BrowserRouter>
   );
 }

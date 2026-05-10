@@ -5,6 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import { Button } from '../../components/ui/Button';
 import { Input } from '../../components/ui/Input';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../../components/ui/Card';
+import { OfflineBanner } from '../../components/ui/OfflineBanner';
 
 export const Login: React.FC = () => {
   const { user, profile } = useAuthStore();
@@ -66,6 +67,7 @@ export const Login: React.FC = () => {
 
   return (
     <div className="flex min-h-screen items-center justify-center bg-[#09090b] text-white p-4 relative overflow-hidden">
+      <OfflineBanner />
       {/* Decorative background elements */}
       <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-blue-500/20 blur-[120px] rounded-full pointer-events-none" />
       <div className="absolute bottom-[-10%] right-[-10%] w-[30%] h-[30%] bg-purple-500/20 blur-[100px] rounded-full pointer-events-none" />

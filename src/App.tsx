@@ -5,7 +5,7 @@ import { useAuthStore } from './store/authStore';
 import { Login } from './features/auth/Login';
 import { Dashboard } from './features/dashboard/Dashboard';
 import { ProtectedRoute } from './components/ProtectedRoute';
-import { DailyReportForm } from './features/reports/DailyReportForm';
+import { ReportsPage } from './features/reports/ReportsPage';
 import { WeeklyReportForm } from './features/reports/WeeklyReportForm';
 import { ResourcesPage } from './features/resources/ResourcesPage';
 import { ToastContainer } from './components/ui/Toast';
@@ -79,7 +79,7 @@ function App() {
         <Routes>
           <Route path="/login" element={<Login />} />
           <Route path="/" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
-          <Route path="/reports" element={<ProtectedRoute><DailyReportForm /></ProtectedRoute>} />
+          <Route path="/reports" element={<ProtectedRoute><ReportsPage /></ProtectedRoute>} />
           <Route path="/resources" element={<ProtectedRoute><ResourcesPage /></ProtectedRoute>} />
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>

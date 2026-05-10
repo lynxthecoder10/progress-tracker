@@ -14,7 +14,7 @@ export const XP_VALUES = {
 };
 
 export function useGamification() {
-  const { user, profile } = useAuthStore();
+  const { user, profile, updateProfile } = useAuthStore();
   const { setLocalStats } = useAppStore();
 
   useEffect(() => {
@@ -29,7 +29,8 @@ export function useGamification() {
     
     const newXp = profile.xp + amount;
     
-    // Optimistic UI update in Zustand could be done here if needed
+    // Update local state first for instant feedback
+    updateProfile({ xp: newXp });
     
     // Update DB
     const { error } = await supabase
@@ -39,6 +40,8 @@ export function useGamification() {
       
     if (error) {
       console.error('Failed to award XP:', error);
+      // Rollback on error
+      updateProfile({ xp: profile.xp });
     }
   };
 

@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { supabase } from '../../lib/supabase';
-import { Card, CardContent, CardHeader, CardTitle } from '../../components/ui/Card';
+import { Card, CardContent } from '../../components/ui/Card';
+import { Trophy, Medal, Flame, Shield, TrendingUp } from 'lucide-react';
+import { motion } from 'framer-motion';
 
 interface LeaderboardEntry {
   user_id: string;
@@ -9,8 +11,6 @@ interface LeaderboardEntry {
   xp: number;
   streak: number;
   trust_score: number;
-  consistency_score: number;
-  ranking_score: number;
 }
 
 export const Leaderboard: React.FC = () => {
@@ -23,65 +23,105 @@ export const Leaderboard: React.FC = () => {
 
   const fetchLeaderboard = async () => {
     setLoading(true);
-    
-    // In a real app we'd join 'users' and 'leaderboard_metrics' via a view or RPC function
-    // For this prototype, we'll fetch users and order by a calculated heuristic or the raw XP/ranking_score
-    
     const { data, error } = await supabase
       .from('users')
-      .select(`
-        id, email, role, xp, streak, trust_score,
-        leaderboard_metrics ( consistency_score, ranking_score )
-      `)
-      .order('xp', { ascending: false }) // Simplification for now, usually order by ranking_score
-      .limit(20);
+      .select(`id, email, role, xp, streak, trust_score`)
+      .order('xp', { ascending: false })
+      .limit(10);
 
     if (!error && data) {
-      const mapped = data.map((u: any) => ({
+      setLeaders(data.map(u => ({
         user_id: u.id,
         email: u.email,
         role: u.role,
         xp: u.xp,
         streak: u.streak,
         trust_score: u.trust_score,
-        consistency_score: u.leaderboard_metrics?.[0]?.consistency_score || 0,
-        ranking_score: u.leaderboard_metrics?.[0]?.ranking_score || 0,
-      }));
-      setLeaders(mapped);
+      })));
     }
     setLoading(false);
   };
 
+  const getRankStyles = (index: number) => {
+    switch (index) {
+      case 0: return { bg: 'bg-yellow-500/10', border: 'border-yellow-500/50', icon: 'text-yellow-500', medal: <Trophy size={20} className="text-yellow-500" /> };
+      case 1: return { bg: 'bg-slate-300/10', border: 'border-slate-300/50', icon: 'text-slate-300', medal: <Medal size={20} className="text-slate-300" /> };
+      case 2: return { bg: 'bg-amber-600/10', border: 'border-amber-600/50', icon: 'text-amber-600', medal: <Medal size={20} className="text-amber-600" /> };
+      default: return { bg: 'bg-white/2', border: 'border-white/5', icon: 'text-gray-500', medal: null };
+    }
+  };
+
   return (
-    <Card className="border-white/10 bg-black/60 mt-6">
-      <CardHeader>
-        <CardTitle className="text-xl">Global Leaderboard</CardTitle>
-      </CardHeader>
-      <CardContent>
+    <Card className="border-white/10 bg-[#121214]/50 backdrop-blur-xl overflow-hidden">
+      <CardContent className="p-0">
         {loading ? (
-          <div className="animate-pulse flex flex-col space-y-4">
-            {[1, 2, 3].map(i => <div key={i} className="h-10 bg-white/10 rounded-md"></div>)}
+          <div className="p-6 space-y-4">
+            {[1, 2, 3, 4, 5].map(i => (
+              <div key={i} className="h-16 bg-white/5 rounded-2xl animate-pulse" />
+            ))}
           </div>
         ) : (
-          <div className="space-y-4">
-            {leaders.map((leader, index) => (
-              <div key={leader.user_id} className="flex items-center justify-between p-3 rounded-lg bg-white/5 border border-white/5">
-                <div className="flex items-center gap-4">
-                  <div className="text-xl font-bold text-gray-500 w-6 text-center">#{index + 1}</div>
-                  <div>
-                    <p className="font-semibold">{leader.email.split('@')[0]}</p>
-                    <p className="text-xs text-muted-foreground capitalize">{leader.role} • {leader.streak}🔥</p>
+          <div className="divide-y divide-white/5">
+            {leaders.map((leader, index) => {
+              const styles = getRankStyles(index);
+              return (
+                <motion.div 
+                  key={leader.user_id}
+                  initial={{ opacity: 0, x: -20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: index * 0.05 }}
+                  className={`flex items-center justify-between p-6 transition-all hover:bg-white/[0.03] group`}
+                >
+                  <div className="flex items-center gap-6">
+                    <div className="relative flex items-center justify-center w-10">
+                      {styles.medal ? (
+                        <div className="animate-bounce-subtle">{styles.medal}</div>
+                      ) : (
+                        <span className="text-lg font-black text-gray-600">#{index + 1}</span>
+                      )}
+                    </div>
+                    
+                    <div className="flex items-center gap-4">
+                      <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-blue-500/20 to-purple-500/20 border border-white/10 flex items-center justify-center text-xl font-bold text-white shadow-inner">
+                        {leader.email[0].toUpperCase()}
+                      </div>
+                      <div>
+                        <div className="flex items-center gap-2">
+                          <p className="font-bold text-gray-200 group-hover:text-white transition-colors">{leader.email.split('@')[0]}</p>
+                          {leader.streak > 5 && <Flame size={14} className="text-orange-500" />}
+                        </div>
+                        <div className="flex items-center gap-3 mt-0.5">
+                          <span className="text-[10px] font-bold uppercase tracking-widest text-gray-500 bg-white/5 px-2 py-0.5 rounded-full">{leader.role}</span>
+                          <span className="flex items-center gap-1 text-[10px] font-medium text-orange-400">
+                            <Flame size={10} /> {leader.streak} Day Streak
+                          </span>
+                        </div>
+                      </div>
+                    </div>
                   </div>
-                </div>
-                <div className="text-right">
-                  <p className="font-bold text-primary">{leader.xp} XP</p>
-                  <p className="text-xs text-green-500">Trust: {leader.trust_score}</p>
-                </div>
-              </div>
-            ))}
+
+                  <div className="text-right">
+                    <div className="flex items-center justify-end gap-2 text-blue-400 font-black text-xl italic tracking-tight">
+                      <TrendingUp size={16} className="text-blue-500/50" />
+                      {leader.xp.toLocaleString()} <span className="text-[10px] font-bold uppercase ml-1 opacity-50">XP</span>
+                    </div>
+                    <div className="flex items-center justify-end gap-1.5 mt-1">
+                      <Shield size={10} className="text-green-500/50" />
+                      <span className="text-[10px] font-bold text-green-500/80 uppercase tracking-tighter">Trust Score: {leader.trust_score}</span>
+                    </div>
+                  </div>
+                </motion.div>
+              );
+            })}
             
             {leaders.length === 0 && (
-              <p className="text-center text-muted-foreground py-6">No users found.</p>
+              <div className="p-20 text-center space-y-4">
+                <div className="w-16 h-16 bg-white/5 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <Trophy className="text-gray-600" size={32} />
+                </div>
+                <h3 className="text-xl font-semibold text-gray-300">No competitors yet</h3>
+                <p className="text-gray-500 text-sm">Be the first to climb the leaderboard!</p>
+              </div>
             )}
           </div>
         )}

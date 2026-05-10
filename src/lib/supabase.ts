@@ -1,26 +1,11 @@
-import { createClient } from "@supabase/supabase-js";
+import { createClient } from '@supabase/supabase-js';
+import type { Database } from '../types/supabase'; // We'll generate/create this next
 
-const supabaseUrl = import.meta.env.VITE_SUPABASE_URL?.trim();
-const supabaseKey =
-  import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY?.trim() ||
-  import.meta.env.VITE_SUPABASE_ANON_KEY?.trim();
-export const RESOURCE_BUCKET = "resource-files";
+const supabaseUrl = import.meta.env.VITE_SUPABASE_URL || '';
+const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY || '';
 
-const hasPlaceholder =
-  !supabaseUrl ||
-  !supabaseKey ||
-  supabaseUrl.includes("your-project") ||
-  supabaseKey.includes("your-");
+if (!supabaseUrl || !supabaseAnonKey) {
+  console.warn('Supabase URL or Anon Key is missing. Check your .env file.');
+}
 
-export const isSupabaseConfigured = Boolean(!hasPlaceholder);
-export const isDemoModeAvailable = import.meta.env.DEV && import.meta.env.VITE_ENABLE_DEMO_DATA === "true";
-
-export const supabase = isSupabaseConfigured
-  ? createClient(supabaseUrl, supabaseKey, {
-      auth: {
-        persistSession: true,
-        autoRefreshToken: true,
-        detectSessionInUrl: true
-      }
-    })
-  : null;
+export const supabase = createClient<Database>(supabaseUrl, supabaseAnonKey);

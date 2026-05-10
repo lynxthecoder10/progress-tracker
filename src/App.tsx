@@ -1,92 +1,81 @@
-import { motion } from "framer-motion";
-import { useState } from "react";
-import { AppShell } from "./components/layout/AppShell";
-import { AuthScreen } from "./features/auth/AuthScreen";
-import { DashboardView } from "./features/dashboard/DashboardView";
-import { LeaderboardView } from "./features/leaderboard/LeaderboardView";
-import { ReportsView } from "./features/reports/ReportsView";
-import { ResourcesView } from "./features/resources/ResourcesView";
-import { TasksView } from "./features/tasks/TasksView";
-import { WarningsView } from "./features/warnings/WarningsView";
-import { useAuth } from "./hooks/useAuth";
-import { useTrackerData } from "./hooks/useTrackerData";
-import { isDemoModeAvailable, isSupabaseConfigured } from "./lib/supabase";
-import { useAppStore } from "./store/appStore";
+import React, { useEffect } from 'react';
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import { supabase } from './lib/supabase';
+import { useAuthStore } from './store/authStore';
+import { Login } from './features/auth/Login';
+import { Dashboard } from './features/dashboard/Dashboard';
+import { ProtectedRoute } from './components/ProtectedRoute';
+import { DailyReportForm } from './features/reports/DailyReportForm';
+import { WeeklyReportForm } from './features/reports/WeeklyReportForm';
 
-export default function App() {
-  const auth = useAuth();
-  const { activeView, demoUserId, setDemoUserId } = useAppStore();
-  const [demoMode, setDemoMode] = useState(!isSupabaseConfigured && isDemoModeAvailable);
-  const activeUserId = auth.user?.id ?? (demoMode ? demoUserId : null);
-  const tracker = useTrackerData(activeUserId, demoMode);
-  const currentUser = tracker.currentUser;
+function App() {
+  const { setUser, setProfile, setLoading } = useAuthStore();
 
-  if (!auth.ready) return <SplashScreen />;
+  useEffect(() => {
+    // Check active sessions and sets the user
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      setUser(session?.user ?? null);
+      if (session?.user) {
+        fetchProfile(session.user.id);
+      } else {
+        setLoading(false);
+      }
+    });
 
-  if (!activeUserId) {
-    return (
-      <AuthScreen
-        demoAllowed={isDemoModeAvailable}
-        authError={auth.error}
-        onDemo={() => {
-          setDemoUserId("demo-admin");
-          setDemoMode(true);
-        }}
-        onSignIn={auth.signIn}
-        onSignUp={auth.signUp}
-      />
-    );
-  }
+    // Listen for changes on auth state
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+      setUser(session?.user ?? null);
+      if (session?.user) {
+        fetchProfile(session.user.id);
+      } else {
+        setProfile(null);
+        setLoading(false);
+      }
+    });
 
-  if (!currentUser) return <SplashScreen />;
+    return () => subscription.unsubscribe();
+  }, []);
+
+  const fetchProfile = async (userId: string) => {
+    const { data, error } = await supabase
+      .from('users')
+      .select('*')
+      .eq('id', userId)
+      .single();
+      
+    if (!error && data) {
+      setProfile(data as any);
+    }
+    setLoading(false);
+  };
 
   return (
-    <AppShell
-      users={tracker.data.users}
-      currentUser={currentUser}
-      activeView={activeView}
-      demoMode={demoMode}
-      isLive={tracker.isLive}
-      onSignOut={async () => {
-        setDemoMode(false);
-        setDemoUserId("demo-admin");
-        await auth.signOut();
-      }}
-    >
-      {tracker.error ? (
-        <div className="mb-5 rounded-lg border border-rose-500/25 bg-rose-500/10 p-4 text-sm text-rose-100">{tracker.error}</div>
-      ) : null}
-      {tracker.loading ? (
-        <div className="rounded-lg border border-zinc-800 bg-zinc-950/70 p-6 text-sm text-zinc-400">Loading workspace...</div>
-      ) : (
-        <motion.div key={activeView} initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.2 }}>
-          {activeView === "dashboard" ? <DashboardView data={tracker.data} currentUser={currentUser} /> : null}
-          {activeView === "reports" ? (
-            <ReportsView data={tracker.data} currentUser={currentUser} onSubmitReport={tracker.submitWeeklyReport} />
-          ) : null}
-          {activeView === "leaderboard" ? <LeaderboardView data={tracker.data} /> : null}
-          {activeView === "warnings" ? (
-            <WarningsView data={tracker.data} currentUser={currentUser} onIssueWarning={tracker.issueWarning} />
-          ) : null}
-          {activeView === "resources" ? <ResourcesView data={tracker.data} onAddResource={tracker.addResource} /> : null}
-          {activeView === "tasks" ? (
-            <TasksView
-              data={tracker.data}
-              currentUser={currentUser}
-              onCreateTask={tracker.createTask}
-              onCompleteTask={tracker.completeTask}
-            />
-          ) : null}
-        </motion.div>
-      )}
-    </AppShell>
+    <BrowserRouter>
+      <Routes>
+        <Route path="/login" element={<Login />} />
+        
+        {/* Protected Routes */}
+        <Route path="/" element={
+          <ProtectedRoute>
+            <Dashboard />
+          </ProtectedRoute>
+        } />
+        <Route path="/report/daily" element={
+          <ProtectedRoute>
+            <DailyReportForm />
+          </ProtectedRoute>
+        } />
+        <Route path="/report/weekly" element={
+          <ProtectedRoute>
+            <WeeklyReportForm />
+          </ProtectedRoute>
+        } />
+        
+        {/* Catch all */}
+        <Route path="*" element={<Navigate to="/" replace />} />
+      </Routes>
+    </BrowserRouter>
   );
 }
 
-function SplashScreen() {
-  return (
-    <div className="grid min-h-screen place-items-center bg-zinc-950 text-zinc-400">
-      <div className="rounded-lg border border-zinc-800 bg-zinc-950/70 p-6 text-sm">Starting ProgressTracker...</div>
-    </div>
-  );
-}
+export default App;

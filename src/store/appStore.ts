@@ -1,20 +1,26 @@
-import { create } from "zustand";
-import type { ViewId } from "../types";
+import { create } from 'zustand';
 
-type AppState = {
-  activeView: ViewId;
+interface AppState {
   sidebarOpen: boolean;
-  demoUserId: string;
-  setActiveView: (view: ViewId) => void;
-  setSidebarOpen: (open: boolean) => void;
-  setDemoUserId: (userId: string) => void;
-};
+  setSidebarOpen: (isOpen: boolean) => void;
+  toggleSidebar: () => void;
+  
+  // Local cache to reduce DB reads for immediate feedback
+  localXp: number | null;
+  localStreak: number | null;
+  setLocalStats: (xp: number, streak: number) => void;
+  addLocalXp: (amount: number) => void;
+}
 
 export const useAppStore = create<AppState>((set) => ({
-  activeView: "dashboard",
   sidebarOpen: false,
-  demoUserId: "demo-admin",
-  setActiveView: (activeView) => set({ activeView, sidebarOpen: false }),
-  setSidebarOpen: (sidebarOpen) => set({ sidebarOpen }),
-  setDemoUserId: (demoUserId) => set({ demoUserId })
+  setSidebarOpen: (isOpen) => set({ sidebarOpen: isOpen }),
+  toggleSidebar: () => set((state) => ({ sidebarOpen: !state.sidebarOpen })),
+  
+  localXp: null,
+  localStreak: null,
+  setLocalStats: (xp, streak) => set({ localXp: xp, localStreak: streak }),
+  addLocalXp: (amount) => set((state) => ({ 
+    localXp: state.localXp !== null ? state.localXp + amount : null 
+  })),
 }));

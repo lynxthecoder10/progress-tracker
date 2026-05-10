@@ -9,6 +9,7 @@ export default defineConfig({
       "react-is": "./src/lib/reactIsCompat.ts"
     }
   },
+  envPrefix: ['VITE_', 'NEXT_PUBLIC_'],
   build: {
     rollupOptions: {
       output: {

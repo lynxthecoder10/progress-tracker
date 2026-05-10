@@ -63,7 +63,7 @@ export const Login: React.FC = () => {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
-                autocomplete="email"
+                autoComplete="email"
                 className="bg-white/5 border-white/10 text-white placeholder:text-gray-500"
               />
             </div>
@@ -74,7 +74,7 @@ export const Login: React.FC = () => {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 required
-                autocomplete="current-password"
+                autoComplete="current-password"
                 className="bg-white/5 border-white/10 text-white placeholder:text-gray-500"
               />
             </div>

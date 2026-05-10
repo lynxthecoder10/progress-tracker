@@ -4,7 +4,7 @@ import { Leaderboard } from './Leaderboard';
 import { QuizWidget } from '../quizzes/QuizWidget';
 import { WarningsWidget } from './WarningsWidget';
 import { motion } from 'framer-motion';
-import { Zap, Flame, Shield, User, ChevronRight, Star, Heart, HandHeart } from 'lucide-react';
+import { Zap, Flame, Shield, User, ChevronRight, Star, Heart, HandHeart, Hammer } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { InstallPWA } from '../../components/InstallPWA';
 import { getRankTitle, getRankColor } from '../../types';

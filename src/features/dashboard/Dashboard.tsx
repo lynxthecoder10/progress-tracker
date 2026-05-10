@@ -17,8 +17,8 @@ export const Dashboard: React.FC = () => {
       label: 'Total XP', 
       value: profile?.xp || 0, 
       icon: Star, 
-      color: 'from-blue-500 to-cyan-400',
-      shadow: 'shadow-blue-500/20'
+      color: 'from-amber-600 to-orange-500',
+      shadow: 'shadow-amber-500/20'
     },
     { 
       label: 'Current Streak', 

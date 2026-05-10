@@ -104,7 +104,7 @@ export const Navbar: React.FC = () => {
                 {isActive(item.path) && (
                   <motion.div 
                     layoutId="nav-pill"
-                    className="absolute inset-0 bg-blue-600 rounded-xl shadow-lg shadow-blue-600/20"
+                    className="absolute inset-0 bg-amber-600 rounded-xl shadow-lg shadow-amber-600/20"
                     transition={{ type: "spring", bounce: 0.25, duration: 0.5 }}
                   />
                 )}
@@ -121,11 +121,11 @@ export const Navbar: React.FC = () => {
             <button 
               onClick={() => setShowNotifications(!showNotifications)}
               className={`relative p-2.5 rounded-xl border transition-all group ${
-                showNotifications ? 'bg-blue-600 border-blue-500 text-white shadow-lg shadow-blue-600/20' : 'bg-white/5 border-white/5 text-gray-400 hover:text-white'
+                showNotifications ? 'bg-amber-600 border-amber-500 text-white shadow-lg shadow-amber-600/20' : 'bg-white/5 border-white/5 text-gray-400 hover:text-white'
               }`}
             >
                <Bell size={20} />
-               {!showNotifications && <span className="absolute top-2.5 right-2.5 w-2 h-2 bg-blue-500 rounded-full border-2 border-[#09090b]" />}
+               {!showNotifications && <span className="absolute top-2.5 right-2.5 w-2 h-2 bg-amber-500 rounded-full border-2 border-[#09090b]" />}
             </button>
 
             <AnimatePresence>
@@ -175,8 +175,8 @@ export const Navbar: React.FC = () => {
                 </p>
               </div>
             </div>
-            <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-white/10 to-white/5 border border-white/10 flex items-center justify-center shadow-inner group cursor-pointer hover:border-blue-500/50 transition-all">
-               <User size={24} className="text-gray-400 group-hover:text-blue-400 transition-colors" />
+            <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-white/10 to-white/5 border border-white/10 flex items-center justify-center shadow-inner group cursor-pointer hover:border-amber-500/50 transition-all">
+               <User size={24} className="text-gray-400 group-hover:text-amber-400 transition-colors" />
             </div>
             <button 
               onClick={handleSignOut}
@@ -199,10 +199,10 @@ export const Navbar: React.FC = () => {
               key={item.path}
               to={item.path}
               className={`flex flex-col items-center justify-center gap-1.5 w-16 transition-all ${
-                active ? 'text-blue-400' : 'text-gray-500'
+                active ? 'text-amber-400' : 'text-gray-500'
               }`}
             >
-              <div className={`p-3 rounded-2xl transition-all relative ${active ? 'bg-blue-600 text-white shadow-lg shadow-blue-600/30 -translate-y-2' : 'hover:bg-white/5'}`}>
+              <div className={`p-3 rounded-2xl transition-all relative ${active ? 'bg-amber-600 text-white shadow-lg shadow-amber-600/30 -translate-y-2' : 'hover:bg-white/5'}`}>
                 <Icon size={24} />
               </div>
               {!active && <span className="text-[10px] font-black uppercase tracking-tighter">{item.name}</span>}

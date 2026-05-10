@@ -12,7 +12,8 @@ import { ToastContainer } from './components/ui/Toast';
 
 function App() {
   const { setUser, setProfile, setLoading } = useAuthStore();
-  const envError = !import.meta.env.VITE_SUPABASE_URL || !import.meta.env.VITE_SUPABASE_URL.startsWith('http');
+  const supabaseUrl = import.meta.env.VITE_SUPABASE_URL || import.meta.env.NEXT_PUBLIC_SUPABASE_URL;
+  const envError = !supabaseUrl || !supabaseUrl.startsWith('http');
 
   useEffect(() => {
     if (envError) {
@@ -64,8 +65,8 @@ function App() {
           The Supabase environment variables are missing. Please add <strong>VITE_SUPABASE_URL</strong> and <strong>VITE_SUPABASE_ANON_KEY</strong> to your Netlify settings and redeploy.
         </p>
         <div className="bg-white/5 p-4 rounded border border-white/10 text-left text-xs font-mono">
-          VITE_SUPABASE_URL: {import.meta.env.VITE_SUPABASE_URL || 'Missing'}<br/>
-          VITE_SUPABASE_ANON_KEY: {import.meta.env.VITE_SUPABASE_ANON_KEY ? 'Present (Hidden)' : 'Missing'}
+          URL: {import.meta.env.VITE_SUPABASE_URL || import.meta.env.NEXT_PUBLIC_SUPABASE_URL || 'Missing'}<br/>
+          Key: {(import.meta.env.VITE_SUPABASE_ANON_KEY || import.meta.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY) ? 'Present (Hidden)' : 'Missing'}
         </div>
       </div>
     );

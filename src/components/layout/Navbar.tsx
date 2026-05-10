@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { LayoutDashboard, BookOpen, FileText, LogOut, User, Bell, ShieldCheck, CheckCircle, AlertTriangle } from 'lucide-react';
 import { useAuthStore } from '../../store/authStore';
 import { supabase } from '../../lib/supabase';
@@ -7,9 +7,11 @@ import { motion, AnimatePresence } from 'framer-motion';
 
 export const Navbar: React.FC = () => {
   const location = useLocation();
+  const navigate = useNavigate();
   const { profile } = useAuthStore();
   const [isScrolled, setIsScrolled] = useState(false);
   const [showNotifications, setShowNotifications] = useState(false);
+  const [logoClicks, setLogoClicks] = useState(0);
   const notificationRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -28,6 +30,17 @@ export const Navbar: React.FC = () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, []);
+
+  useEffect(() => {
+    if (logoClicks === 3) {
+      if (profile?.role === 'admin') {
+        navigate('/admin');
+      }
+      setLogoClicks(0);
+    }
+    const timer = setTimeout(() => setLogoClicks(0), 2000);
+    return () => clearTimeout(timer);
+  }, [logoClicks, profile, navigate]);
 
   const handleSignOut = async () => {
     await supabase.auth.signOut();
@@ -61,14 +74,20 @@ export const Navbar: React.FC = () => {
         }`}
       >
         <div className="flex items-center gap-12">
-          <Link to="/" className="flex items-center gap-2 group">
+          <div 
+            onClick={() => {
+              setLogoClicks(prev => prev + 1);
+              if (location.pathname !== '/') navigate('/');
+            }}
+            className="flex items-center gap-2 group cursor-pointer"
+          >
             <div className="w-10 h-10 bg-gradient-to-tr from-blue-600 to-indigo-600 rounded-xl flex items-center justify-center shadow-lg shadow-blue-600/20 group-hover:scale-110 transition-transform duration-300">
               <LayoutDashboard size={22} className="text-white" />
             </div>
             <span className="text-2xl font-black tracking-tighter text-white">
               Progress<span className="text-blue-500">Tracker</span>
             </span>
-          </Link>
+          </div>
           
           <div className="flex items-center p-1 bg-white/5 rounded-2xl border border-white/5 backdrop-blur-md">
             {navItems.map((item) => (
@@ -197,6 +216,24 @@ export const Navbar: React.FC = () => {
           <span className="text-[10px] font-black uppercase tracking-tighter">Exit</span>
         </button>
       </nav>
+
+      {/* Mobile Header (Brand Only) */}
+      <div className="md:hidden flex items-center justify-between p-6 bg-transparent">
+        <div 
+          onClick={() => {
+            setLogoClicks(prev => prev + 1);
+            if (location.pathname !== '/') navigate('/');
+          }}
+          className="cursor-pointer"
+        >
+          <span className="text-xl font-black tracking-tighter text-white">
+            Progress<span className="text-blue-500">Tracker</span>
+          </span>
+        </div>
+        <div className="w-10 h-10 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center">
+          <User size={20} className="text-gray-400" />
+        </div>
+      </div>
     </>
   );
 };

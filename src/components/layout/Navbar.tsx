@@ -1,19 +1,28 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Home, BookOpen, FileText, Settings, LogOut } from 'lucide-react';
+import { LayoutDashboard, BookOpen, FileText, LogOut, Menu, X, User, Bell } from 'lucide-react';
 import { useAuthStore } from '../../store/authStore';
 import { supabase } from '../../lib/supabase';
+import { motion, AnimatePresence } from 'framer-motion';
 
 export const Navbar: React.FC = () => {
   const location = useLocation();
   const { profile } = useAuthStore();
+  const [isScrolled, setIsScrolled] = useState(false);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => setIsScrolled(window.scrollY > 10);
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
 
   const handleSignOut = async () => {
     await supabase.auth.signOut();
   };
 
   const navItems = [
-    { name: 'Dashboard', path: '/', icon: Home },
+    { name: 'Dashboard', path: '/', icon: LayoutDashboard },
     { name: 'Resources', path: '/resources', icon: BookOpen },
     { name: 'Reports', path: '/reports', icon: FileText },
   ];
@@ -22,47 +31,79 @@ export const Navbar: React.FC = () => {
 
   return (
     <>
-      {/* Desktop Top Navbar */}
-      <nav className="hidden md:flex fixed top-0 left-0 right-0 h-16 bg-[#09090b]/80 backdrop-blur-md border-b border-white/10 z-50 items-center justify-between px-6">
-        <div className="flex items-center gap-8">
-          <Link to="/" className="text-xl font-bold tracking-tighter text-white">
-            Progress<span className="text-blue-500">Tracker</span>
+      {/* Premium Desktop Top Navbar */}
+      <nav 
+        className={`hidden md:flex fixed top-0 left-0 right-0 h-20 z-50 transition-all duration-500 items-center justify-between px-8 ${
+          isScrolled 
+            ? 'bg-[#09090b]/80 backdrop-blur-xl border-b border-white/5 py-4' 
+            : 'bg-transparent py-6'
+        }`}
+      >
+        <div className="flex items-center gap-12">
+          <Link to="/" className="flex items-center gap-2 group">
+            <div className="w-10 h-10 bg-gradient-to-tr from-blue-600 to-indigo-600 rounded-xl flex items-center justify-center shadow-lg shadow-blue-600/20 group-hover:scale-110 transition-transform duration-300">
+              <LayoutDashboard size={22} className="text-white" />
+            </div>
+            <span className="text-2xl font-black tracking-tighter text-white">
+              Progress<span className="text-blue-500">Tracker</span>
+            </span>
           </Link>
           
-          <div className="flex items-center gap-1">
+          <div className="flex items-center p-1 bg-white/5 rounded-2xl border border-white/5 backdrop-blur-md">
             {navItems.map((item) => (
               <Link
                 key={item.path}
                 to={item.path}
-                className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${
+                className={`relative px-6 py-2 rounded-xl text-sm font-bold transition-all flex items-center gap-2 ${
                   isActive(item.path)
-                    ? 'bg-blue-500/10 text-blue-400'
-                    : 'text-gray-400 hover:text-white hover:bg-white/5'
+                    ? 'text-white'
+                    : 'text-gray-500 hover:text-gray-300'
                 }`}
               >
-                {item.name}
+                {isActive(item.path) && (
+                  <motion.div 
+                    layoutId="nav-pill"
+                    className="absolute inset-0 bg-blue-600 rounded-xl shadow-lg shadow-blue-600/20"
+                    transition={{ type: "spring", bounce: 0.25, duration: 0.5 }}
+                  />
+                )}
+                <item.icon size={16} className="relative z-10" />
+                <span className="relative z-10">{item.name}</span>
               </Link>
             ))}
           </div>
         </div>
 
-        <div className="flex items-center gap-4">
-          <div className="text-right mr-2 hidden lg:block">
-            <p className="text-sm font-medium text-white">{profile?.email?.split('@')[0]}</p>
-            <p className="text-xs text-gray-500 capitalize">{profile?.role}</p>
-          </div>
-          <button 
-            onClick={handleSignOut}
-            className="p-2 rounded-full text-gray-400 hover:text-red-400 hover:bg-red-400/10 transition-all"
-            title="Sign Out"
-          >
-            <LogOut size={20} />
+        <div className="flex items-center gap-6">
+          <button className="relative p-2.5 rounded-xl bg-white/5 border border-white/5 text-gray-400 hover:text-white transition-all group">
+             <Bell size={20} />
+             <span className="absolute top-2.5 right-2.5 w-2 h-2 bg-blue-500 rounded-full border-2 border-[#09090b]" />
           </button>
+          
+          <div className="flex items-center gap-4 pl-6 border-l border-white/10">
+            <div className="text-right">
+              <p className="text-sm font-black text-white">{profile?.email?.split('@')[0]}</p>
+              <div className="flex items-center justify-end gap-1.5">
+                <div className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse" />
+                <p className="text-[10px] font-bold text-gray-500 uppercase tracking-widest">{profile?.role}</p>
+              </div>
+            </div>
+            <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-white/10 to-white/5 border border-white/10 flex items-center justify-center shadow-inner group cursor-pointer hover:border-blue-500/50 transition-all">
+               <User size={24} className="text-gray-400 group-hover:text-blue-400 transition-colors" />
+            </div>
+            <button 
+              onClick={handleSignOut}
+              className="p-3 rounded-2xl bg-red-500/10 border border-red-500/10 text-red-500 hover:bg-red-500 hover:text-white transition-all shadow-lg shadow-red-500/5"
+              title="Sign Out"
+            >
+              <LogOut size={20} />
+            </button>
+          </div>
         </div>
       </nav>
 
-      {/* Mobile Bottom Bar */}
-      <nav className="md:hidden fixed bottom-0 left-0 right-0 h-16 bg-[#09090b]/90 backdrop-blur-lg border-t border-white/10 z-50 flex items-center justify-around px-2 pb-safe">
+      {/* Premium Mobile Bottom Bar */}
+      <nav className="md:hidden fixed bottom-6 left-6 right-6 h-20 bg-[#09090b]/80 backdrop-blur-2xl border border-white/10 rounded-[2.5rem] z-50 flex items-center justify-around px-4 shadow-2xl">
         {navItems.map((item) => {
           const Icon = item.icon;
           const active = isActive(item.path);
@@ -70,27 +111,37 @@ export const Navbar: React.FC = () => {
             <Link
               key={item.path}
               to={item.path}
-              className={`flex flex-col items-center justify-center gap-1 w-16 transition-all ${
+              className={`flex flex-col items-center justify-center gap-1.5 w-16 transition-all ${
                 active ? 'text-blue-400' : 'text-gray-500'
               }`}
             >
-              <div className={`p-1.5 rounded-xl transition-all ${active ? 'bg-blue-500/20 shadow-[0_0_15px_rgba(59,130,246,0.3)]' : ''}`}>
-                <Icon size={22} />
+              <div className={`p-3 rounded-2xl transition-all relative ${active ? 'bg-blue-600 text-white shadow-lg shadow-blue-600/30 -translate-y-2' : 'hover:bg-white/5'}`}>
+                <Icon size={24} />
               </div>
-              <span className="text-[10px] font-medium tracking-tight">{item.name}</span>
+              {!active && <span className="text-[10px] font-black uppercase tracking-tighter">{item.name}</span>}
             </Link>
           );
         })}
         <button 
           onClick={handleSignOut}
-          className="flex flex-col items-center justify-center gap-1 w-16 text-gray-500"
+          className="flex flex-col items-center justify-center gap-1.5 w-16 text-gray-500"
         >
-          <div className="p-1.5 rounded-xl">
-            <LogOut size={22} />
+          <div className="p-3 rounded-2xl hover:bg-red-500/10 hover:text-red-500 transition-all">
+            <LogOut size={24} />
           </div>
-          <span className="text-[10px] font-medium tracking-tight">Sign Out</span>
+          <span className="text-[10px] font-black uppercase tracking-tighter">Exit</span>
         </button>
       </nav>
+
+      {/* Mobile Header (Brand Only) */}
+      <div className="md:hidden flex items-center justify-between p-6 bg-transparent">
+        <Link to="/" className="text-xl font-black tracking-tighter text-white">
+          Progress<span className="text-blue-500">Tracker</span>
+        </Link>
+        <div className="w-10 h-10 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center">
+          <User size={20} className="text-gray-400" />
+        </div>
+      </div>
     </>
   );
 };

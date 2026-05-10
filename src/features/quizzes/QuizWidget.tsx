@@ -33,30 +33,38 @@ export const QuizWidget: React.FC = () => {
   const [selectedOption, setSelectedOption] = useState<number | null>(null);
   const [allDone, setAllDone] = useState(false);
 
-  useEffect(() => {
-    fetchNextAvailableQuiz();
-  }, []);
+  const [sessionCount, setSessionCount] = useState(0);
 
-  const fetchNextAvailableQuiz = async () => {
-    if (!user) return;
+  useEffect(() => {
+    if (user) {
+      fetchQuiz();
+    }
+  }, [user]);
+
+  const fetchQuiz = async () => {
+    if (sessionCount >= 5) {
+      setAllDone(true);
+      return;
+    }
+    
     setLoading(true);
     setAnswered(false);
     setSelectedOption(null);
-    
-    // 1. Get IDs of quizzes already correctly answered by the user
+    setIsCorrect(false);
+
+    // Get quizzes the user hasn't attempted successfully yet
     const { data: attempts } = await supabase
       .from('quiz_attempts')
       .select('quiz_id')
-      .eq('user_id', user.id)
+      .eq('user_id', user?.id)
       .eq('is_correct', true);
 
-    const completedIds = attempts?.map(a => a.quiz_id) || [];
+    const attemptedIds = attempts?.map(a => a.quiz_id) || [];
 
-    // 2. Fetch a quiz that hasn't been completed
     const { data: quizzes, error } = await supabase
       .from('quizzes')
       .select('*')
-      .not('id', 'in', `(${completedIds.join(',') || '00000000-0000-0000-0000-000000000000'})`)
+      .not('id', 'in', `(${attemptedIds.join(',') || '00000000-0000-0000-0000-000000000000'})`)
       .limit(1);
 
     if (!error && quizzes && quizzes.length > 0) {
@@ -81,6 +89,7 @@ export const QuizWidget: React.FC = () => {
 
     setSelectedOption(index);
     setAnswered(true);
+    setSessionCount(prev => prev + 1);
 
     const correct = index === currentQuestion.correct;
     setIsCorrect(correct);
@@ -162,7 +171,7 @@ export const QuizWidget: React.FC = () => {
                 btnClass += " bg-white/2 border-white/5 opacity-40";
               }
             } else {
-              btnClass += " bg-white/5 border-white/10 hover:bg-white/10 hover:border-blue-500/50 hover:translate-x-1 text-gray-300";
+              btnClass += " bg-white/5 border-white/10 hover:bg-white/10 hover:border-amber-500/50 hover:translate-x-1 text-gray-300";
             }
 
             return (
@@ -187,19 +196,22 @@ export const QuizWidget: React.FC = () => {
             className="mt-6 pt-6 border-t border-white/5 flex items-center justify-between"
           >
             <div className="flex items-center gap-2">
-              <div className={`w-2 h-2 rounded-full ${isCorrect ? 'bg-green-500' : 'bg-red-500'} animate-pulse`} />
-              <span className={`text-xs font-black uppercase tracking-widest ${isCorrect ? 'text-green-400' : 'text-red-400'}`}>
+              <div className={`w-2 h-2 rounded-full ${isCorrect ? 'bg-amber-500' : 'bg-red-500'} animate-pulse`} />
+              <span className={`text-xs font-black uppercase tracking-widest ${isCorrect ? 'text-amber-400' : 'text-red-400'}`}>
                 {isCorrect ? `+${XP_VALUES.QUIZ_PASS} XP Earned` : 'Quest Failed'}
               </span>
             </div>
-            <Button 
-              variant="outline" 
-              size="sm" 
-              className="rounded-full border-white/10 hover:bg-white/5 font-bold"
-              onClick={fetchNextAvailableQuiz}
-            >
-              Next Quest
-            </Button>
+            <div className="flex items-center gap-3">
+              <span className="text-[10px] text-gray-500 font-bold uppercase tracking-widest">Quest {sessionCount}/5</span>
+              <Button 
+                variant="outline" 
+                size="sm" 
+                className="rounded-full border-white/10 hover:bg-white/5 font-bold"
+                onClick={fetchQuiz}
+              >
+                Next Challenge
+              </Button>
+            </div>
           </motion.div>
         )}
       </CardContent>

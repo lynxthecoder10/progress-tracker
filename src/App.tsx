@@ -12,8 +12,13 @@ import { ToastContainer } from './components/ui/Toast';
 
 function App() {
   const { setUser, setProfile, setLoading } = useAuthStore();
+  const envError = !import.meta.env.VITE_SUPABASE_URL || !import.meta.env.VITE_SUPABASE_URL.startsWith('http');
 
   useEffect(() => {
+    if (envError) {
+      setLoading(false);
+      return;
+    }
     // Check active sessions and sets the user
     supabase.auth.getSession().then(({ data: { session } }) => {
       setUser(session?.user ?? null);
@@ -50,6 +55,21 @@ function App() {
     }
     setLoading(false);
   };
+
+  if (envError) {
+    return (
+      <div className="flex flex-col h-screen w-screen items-center justify-center bg-[#09090b] text-white p-6 text-center">
+        <h1 className="text-2xl font-bold text-red-500 mb-4">Configuration Error</h1>
+        <p className="max-w-md text-gray-400 mb-6">
+          The Supabase environment variables are missing. Please add <strong>VITE_SUPABASE_URL</strong> and <strong>VITE_SUPABASE_ANON_KEY</strong> to your Netlify settings and redeploy.
+        </p>
+        <div className="bg-white/5 p-4 rounded border border-white/10 text-left text-xs font-mono">
+          VITE_SUPABASE_URL: {import.meta.env.VITE_SUPABASE_URL || 'Missing'}<br/>
+          VITE_SUPABASE_ANON_KEY: {import.meta.env.VITE_SUPABASE_ANON_KEY ? 'Present (Hidden)' : 'Missing'}
+        </div>
+      </div>
+    );
+  }
 
   return (
     <BrowserRouter>

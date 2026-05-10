@@ -7,6 +7,7 @@ import { motion } from 'framer-motion';
 import { Zap, Flame, Shield, User, ChevronRight, Star, Heart, HandHeart } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { InstallPWA } from '../../components/InstallPWA';
+import { getRankTitle, getRankColor } from '../../types';
 
 export const Dashboard: React.FC = () => {
   const { profile } = useAuthStore();
@@ -48,7 +49,7 @@ export const Dashboard: React.FC = () => {
   return (
     <div className="p-4 md:p-8 space-y-10">
       {/* Welcome Banner */}
-      <section className="relative overflow-hidden rounded-[2.5rem] bg-gradient-to-br from-blue-600 to-indigo-900 p-8 md:p-12 text-white shadow-2xl">
+      <section className="relative overflow-hidden rounded-[2.5rem] bg-gradient-to-br from-purple-700 to-indigo-900 p-8 md:p-12 text-white shadow-2xl">
         <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 blur-3xl rounded-full -translate-y-1/2 translate-x-1/2" />
         <div className="absolute bottom-0 left-0 w-48 h-48 bg-blue-400/20 blur-3xl rounded-full translate-y-1/2 -translate-x-1/2" />
         
@@ -57,13 +58,16 @@ export const Dashboard: React.FC = () => {
             <motion.div
               initial={{ opacity: 0, x: -20 }}
               animate={{ opacity: 1, x: 0 }}
+              className="space-y-4"
             >
+              <div className={`inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/10 border border-white/10 backdrop-blur-md text-[10px] font-black uppercase tracking-[0.2em] ${getRankColor(profile?.xp || 0)}`}>
+                <Zap size={12} /> {getRankTitle(profile?.xp || 0)}
+              </div>
               <h1 className="text-4xl md:text-5xl font-black tracking-tight leading-tight">
-                Welcome Back,<br/> 
-                <span className="text-blue-200">{profile?.email?.split('@')[0]}</span>
+                Welcome to <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-300 to-indigo-200">RankChaser</span>
               </h1>
-              <p className="mt-4 text-lg text-blue-100/80 max-w-md font-medium">
-                You're in the top <span className="text-white font-bold">5%</span> of developers this week. Keep the momentum going!
+              <p className="mt-2 text-lg text-purple-100/80 max-w-md font-medium">
+                You're currently a <span className="text-white font-bold">{getRankTitle(profile?.xp || 0)}</span>. Climb to <span className="text-white font-bold">Supremacy</span>!
               </p>
             </motion.div>
             

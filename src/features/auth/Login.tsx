@@ -6,6 +6,7 @@ import { Button } from '../../components/ui/Button';
 import { Input } from '../../components/ui/Input';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../../components/ui/Card';
 import { OfflineBanner } from '../../components/ui/OfflineBanner';
+import { Zap } from 'lucide-react';
 
 export const Login: React.FC = () => {
   const { user, profile } = useAuthStore();
@@ -74,7 +75,12 @@ export const Login: React.FC = () => {
       
       <Card className="w-full max-w-md z-10 border-white/10 bg-[#09090b]/80 backdrop-blur-xl">
         <CardHeader className="space-y-1 text-center">
-          <CardTitle className="text-3xl font-bold tracking-tight text-white">ProgressTracker</CardTitle>
+          <CardTitle className="text-3xl font-bold tracking-tight text-white flex items-center justify-center gap-2">
+            <div className="w-8 h-8 bg-purple-600 rounded-lg flex items-center justify-center">
+              <Zap size={18} className="text-white" />
+            </div>
+            Rank<span className="text-purple-500">Chaser</span>
+          </CardTitle>
           <CardDescription className="text-gray-400">
             {isRegistering ? 'Create your team account' : 'Sign in to your team account'}
           </CardDescription>

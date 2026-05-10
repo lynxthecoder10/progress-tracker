@@ -1,9 +1,10 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { LayoutDashboard, BookOpen, FileText, LogOut, User, Bell, ShieldCheck, CheckCircle, AlertTriangle } from 'lucide-react';
+import { LayoutDashboard, BookOpen, FileText, LogOut, User, Bell, ShieldCheck, CheckCircle, AlertTriangle, Zap } from 'lucide-react';
 import { useAuthStore } from '../../store/authStore';
 import { supabase } from '../../lib/supabase';
 import { motion, AnimatePresence } from 'framer-motion';
+import { getRankTitle, getRankColor } from '../../types';
 
 export const Navbar: React.FC = () => {
   const location = useLocation();
@@ -81,11 +82,11 @@ export const Navbar: React.FC = () => {
             }}
             className="flex items-center gap-2 group cursor-pointer"
           >
-            <div className="w-10 h-10 bg-gradient-to-tr from-blue-600 to-indigo-600 rounded-xl flex items-center justify-center shadow-lg shadow-blue-600/20 group-hover:scale-110 transition-transform duration-300">
-              <LayoutDashboard size={22} className="text-white" />
+            <div className="w-10 h-10 bg-gradient-to-tr from-purple-600 to-indigo-600 rounded-xl flex items-center justify-center shadow-lg shadow-purple-600/20 group-hover:scale-110 transition-transform duration-300">
+              <Zap size={22} className="text-white" />
             </div>
             <span className="text-2xl font-black tracking-tighter text-white">
-              Progress<span className="text-blue-500">Tracker</span>
+              Rank<span className="text-purple-500">Chaser</span>
             </span>
           </div>
           
@@ -169,7 +170,9 @@ export const Navbar: React.FC = () => {
               <p className="text-sm font-black text-white">{profile?.email?.split('@')[0]}</p>
               <div className="flex items-center justify-end gap-1.5">
                 <div className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse" />
-                <p className="text-[10px] font-bold text-gray-500 uppercase tracking-widest">{profile?.role}</p>
+                <p className={`text-[10px] font-bold uppercase tracking-widest ${getRankColor(profile?.xp || 0)}`}>
+                  {getRankTitle(profile?.xp || 0)}
+                </p>
               </div>
             </div>
             <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-white/10 to-white/5 border border-white/10 flex items-center justify-center shadow-inner group cursor-pointer hover:border-blue-500/50 transition-all">

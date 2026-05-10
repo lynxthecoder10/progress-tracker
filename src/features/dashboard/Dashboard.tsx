@@ -6,6 +6,7 @@ import { WarningsWidget } from './WarningsWidget';
 import { motion } from 'framer-motion';
 import { Zap, Flame, Shield, User, ChevronRight, Star, Heart, HandHeart } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import { InstallPWA } from '../../components/InstallPWA';
 
 export const Dashboard: React.FC = () => {
   const { profile } = useAuthStore();
@@ -84,6 +85,7 @@ export const Dashboard: React.FC = () => {
               >
                 View Resources
               </Link>
+              <InstallPWA />
             </motion.div>
           </div>
 

@@ -33,7 +33,7 @@ export const QuizWidget: React.FC = () => {
   const [selectedOption, setSelectedOption] = useState<number | null>(null);
   const [allDone, setAllDone] = useState(false);
 
-  const [sessionCount, setSessionCount] = useState(0);
+  const [dailyCount, setDailyCount] = useState(0);
 
   useEffect(() => {
     if (user) {
@@ -42,29 +42,45 @@ export const QuizWidget: React.FC = () => {
   }, [user]);
 
   const fetchQuiz = async () => {
-    if (sessionCount >= 5) {
+    if (!user) return;
+    
+    setLoading(true);
+    
+    // 1. Check how many successful quizzes were done in the last 24 hours
+    const oneDayAgo = new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString();
+    const { count } = await supabase
+      .from('quiz_attempts')
+      .select('*', { count: 'exact', head: true })
+      .eq('user_id', user.id)
+      .eq('is_correct', true)
+      .gte('created_at', oneDayAgo);
+
+    const currentDailyCount = count || 0;
+    setDailyCount(currentDailyCount);
+
+    if (currentDailyCount >= 5) {
       setAllDone(true);
+      setLoading(false);
       return;
     }
     
-    setLoading(true);
     setAnswered(false);
     setSelectedOption(null);
     setIsCorrect(false);
 
-    // Get quizzes the user hasn't attempted successfully yet
+    // Get IDs of all correctly answered quizzes (not just today) to avoid repetition
     const { data: attempts } = await supabase
       .from('quiz_attempts')
       .select('quiz_id')
-      .eq('user_id', user?.id)
+      .eq('user_id', user.id)
       .eq('is_correct', true);
 
-    const attemptedIds = attempts?.map(a => a.quiz_id) || [];
+    const completedIds = attempts?.map(a => a.quiz_id) || [];
 
     const { data: quizzes, error } = await supabase
       .from('quizzes')
       .select('*')
-      .not('id', 'in', `(${attemptedIds.join(',') || '00000000-0000-0000-0000-000000000000'})`)
+      .not('id', 'in', `(${completedIds.join(',') || '00000000-0000-0000-0000-000000000000'})`)
       .limit(1);
 
     if (!error && quizzes && quizzes.length > 0) {
@@ -89,10 +105,13 @@ export const QuizWidget: React.FC = () => {
 
     setSelectedOption(index);
     setAnswered(true);
-    setSessionCount(prev => prev + 1);
 
     const correct = index === currentQuestion.correct;
     setIsCorrect(correct);
+
+    if (correct) {
+      setDailyCount(prev => prev + 1);
+    }
 
     // Record attempt
     await supabase.from('quiz_attempts').insert({
@@ -202,7 +221,7 @@ export const QuizWidget: React.FC = () => {
               </span>
             </div>
             <div className="flex items-center gap-3">
-              <span className="text-[10px] text-gray-500 font-bold uppercase tracking-widest">Quest {sessionCount}/5</span>
+              <span className="text-[10px] text-gray-500 font-bold uppercase tracking-widest">Today {dailyCount}/5</span>
               <Button 
                 variant="outline" 
                 size="sm" 

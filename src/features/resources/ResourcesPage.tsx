@@ -9,7 +9,7 @@ import { useGamification, XP_VALUES } from '../../hooks/useGamification';
 import { Button } from '../../components/ui/Button';
 import { Input } from '../../components/ui/Input';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../../components/ui/Card';
-import { Youtube, Github, FileText, GraduationCap, Link as LinkIcon, ThumbsUp, Search, Plus, ExternalLink, Tag } from 'lucide-react';
+import { Video, Code, FileText, GraduationCap, Link as LinkIcon, ThumbsUp, Search, Plus, ExternalLink, Tag } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 const resourceSchema = z.object({
@@ -95,8 +95,8 @@ export const ResourcesPage: React.FC = () => {
 
   const getTypeIcon = (type: string) => {
     switch (type) {
-      case 'youtube': return <Youtube className="text-red-500" />;
-      case 'github': return <Github className="text-gray-300" />;
+      case 'youtube': return <Video className="text-red-500" />;
+      case 'github': return <Code className="text-gray-300" />;
       case 'article': return <FileText className="text-blue-400" />;
       case 'course': return <GraduationCap className="text-purple-400" />;
       default: return <LinkIcon className="text-green-400" />;

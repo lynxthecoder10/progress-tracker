@@ -6,7 +6,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { 
   Hammer, Zap, Brain, Flame, HandHeart, 
   TrendingUp, Crown, Star, Shield, 
-  Calendar, Trophy, Lock, Mail, Github,
+  Calendar, Trophy, Lock, Mail, Code,
   ArrowLeft
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
@@ -145,7 +145,7 @@ export const ProfilePage: React.FC = () => {
               </div>
               <div className="flex items-center gap-4">
                 <div className="p-3 bg-white/5 rounded-2xl">
-                  <Github size={20} className="text-gray-400" />
+                  <Code size={20} className="text-gray-400" />
                 </div>
                 <div>
                   <p className="text-xs text-gray-500 font-bold uppercase tracking-widest">GitHub Repository</p>

@@ -23,7 +23,7 @@ interface QuizData {
 export const QuizWidget: React.FC = () => {
   const { user } = useAuthStore();
   const { addToast } = useAppStore();
-  const { awardXp } = useGamification();
+  const { awardXp, unlockBadge } = useGamification();
   
   const [quiz, setQuiz] = useState<QuizData | null>(null);
   const [currentQuestion, setCurrentQuestion] = useState<Question | null>(null);
@@ -100,7 +100,7 @@ export const QuizWidget: React.FC = () => {
     setLoading(false);
   };
 
-  const { awardXp, unlockBadge } = useGamification();
+  };
 
   const handleAnswer = async (index: number) => {
     if (answered || !currentQuestion || !user || !quiz) return;

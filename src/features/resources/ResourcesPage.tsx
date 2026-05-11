@@ -55,7 +55,22 @@ export const ResourcesPage: React.FC = () => {
     if (!user) return;
 
     try {
-      const tagArray = data.tags.split(',').map(t => t.trim().toLowerCase());
+      const tagArray = data.tags.split(',').map(t => t.trim().toLowerCase()).filter(Boolean);
+
+      // ── Spam filter: title quality check ─────────────────────
+      const titleWords = data.title.trim().split(/\s+/);
+      if (titleWords.length < 2) throw new Error('Title too short — add a descriptive name.');
+      if (/test|untitled|asdf|n\/a|click here/i.test(data.title)) throw new Error('Title looks like spam. Use a real descriptive title.');
+
+      // ── Duplicate URL detection ───────────────────────────────
+      const { data: existing } = await supabase
+        .from('resources')
+        .select('id, title')
+        .eq('url', data.url)
+        .limit(1);
+      if (existing && existing.length > 0) {
+        throw new Error(`This URL was already shared as "${existing[0].title}". No duplicates allowed.`);
+      }
 
       const { error } = await supabase
         .from('resources')
@@ -73,7 +88,7 @@ export const ResourcesPage: React.FC = () => {
       }
 
       await awardPoints(XP_VALUES.RESOURCE_SHARED, 'both', 'Shared a new resource');
-      addToast('Resource shared! +15 XP & +15 Contribution', 'success');
+      addToast(`Resource shared! +${XP_VALUES.RESOURCE_SHARED} XP`, 'success');
       reset();
       setShowAddForm(false);
       fetchResources();
@@ -82,16 +97,24 @@ export const ResourcesPage: React.FC = () => {
     }
   };
 
-  const handleUpvote = async (id: string, currentUpvotes: number) => {
+  const handleUpvote = async (id: string, currentUpvotes: number, ownerId: string) => {
+    // Anti-abuse: one upvote per resource per user (stored in localStorage)
+    if (ownerId === user?.id) { addToast("You can't upvote your own resource!", 'error'); return; }
+    const key = `upvoted_${id}`;
+    if (localStorage.getItem(key)) { addToast('Already upvoted!', 'error'); return; }
+
     const { error } = await supabase
       .from('resources')
       .update({ upvotes: currentUpvotes + 1 })
       .eq('id', id);
       
     if (!error) {
+      localStorage.setItem(key, '1');
       setResources(resources.map(r => r.id === id ? { ...r, upvotes: r.upvotes + 1 } : r));
+      addToast('Upvoted!', 'success');
     }
   };
+
 
   const getTypeIcon = (type: string) => {
     switch (type) {
@@ -223,7 +246,7 @@ export const ResourcesPage: React.FC = () => {
                             {getTypeIcon(resource.type)}
                           </div>
                           <button 
-                            onClick={() => handleUpvote(resource.id, resource.upvotes)}
+                            onClick={() => handleUpvote(resource.id, resource.upvotes, resource.user_id)}
                             className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-blue-500/10 border border-blue-500/20 text-blue-400 text-xs font-black hover:bg-blue-500/20 transition-all"
                           >
                             <ThumbsUp size={14} /> {resource.upvotes}

@@ -51,8 +51,18 @@ export default defineConfig({
           }
         ]
       },
+      includeAssets: ["pwa-icon.png", "offline.html"],
       workbox: {
-        globPatterns: ["**/*.{js,css,html,svg,png,ico}"]
+        globPatterns: ["**/*.{js,css,html,svg,png,ico}"],
+        navigateFallback: null,
+        offlineGoogleAnalytics: false,
+        runtimeCaching: [
+          {
+            urlPattern: /^https:\/\/.*\.supabase\.co\/.*/i,
+            handler: "NetworkFirst",
+            options: { cacheName: "supabase-api", networkTimeoutSeconds: 10 }
+          }
+        ]
       }
     })
   ]

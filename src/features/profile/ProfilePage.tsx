@@ -6,7 +6,7 @@ import { motion } from 'framer-motion';
 import {
   Hammer, Zap, Brain, Flame, TrendingUp, Crown, Star,
   Shield, Calendar, Trophy, Lock, Mail, ArrowLeft,
-  Github, Edit3, Check, X, ExternalLink, HandHeart, Swords
+  GitBranch, Edit3, Check, X, ExternalLink, HandHeart, Swords
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { useAppStore } from '../../store/appStore';
@@ -219,7 +219,7 @@ export const ProfilePage: React.FC = () => {
             {/* GitHub — full row */}
             <div className="sm:col-span-2 flex items-center gap-4 bg-white/5 border border-white/10 rounded-2xl p-5">
               <div className="p-3 bg-white/5 rounded-2xl shrink-0">
-                <Github size={18} className="text-gray-300" />
+                <GitBranch size={18} className="text-gray-300" />
               </div>
 
               <div className="flex-1 min-w-0">

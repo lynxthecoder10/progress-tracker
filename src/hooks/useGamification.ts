@@ -5,13 +5,13 @@ import { useAppStore } from '../store/appStore';
 
 // Gamification constants
 export const XP_VALUES = {
-  DAILY_REPORT: 50,
-  WEEKLY_REPORT: 200,
-  TASK_COMPLETED: 10,
-  RESOURCE_SHARED: 15, // Also adds to contribution
-  QUIZ_PERFECT: 100,
-  QUIZ_PASS: 50,
-  ENDORSEMENT: 25, // Pure contribution
+  DAILY_REPORT: 20,
+  WEEKLY_REPORT: 75,
+  TASK_COMPLETED: 5,
+  RESOURCE_SHARED: 10,
+  QUIZ_PERFECT: 10,
+  QUIZ_PASS: 5,
+  ENDORSEMENT: 15,
 };
 
 export function useGamification() {

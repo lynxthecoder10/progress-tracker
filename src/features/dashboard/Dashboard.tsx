@@ -4,9 +4,10 @@ import { Leaderboard } from './Leaderboard';
 import { QuizWidget } from '../quizzes/QuizWidget';
 import { WarningsWidget } from './WarningsWidget';
 import { motion } from 'framer-motion';
-import { Zap, Flame, Shield, User, ChevronRight, Star, Heart, HandHeart, Hammer } from 'lucide-react';
+import { Zap, Flame, Shield, User, ChevronRight, Star, Heart, Hammer } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { InstallPWA } from '../../components/InstallPWA';
+import { ActivityHeatmap } from './ActivityHeatmap';
 import { getRankTitle, getRankColor } from '../../types';
 
 export const Dashboard: React.FC = () => {
@@ -130,6 +131,14 @@ export const Dashboard: React.FC = () => {
             </div>
           </motion.div>
         ))}
+      </section>
+
+      {/* Activity Heatmap */}
+      <section>
+        <div className="flex items-center justify-between mb-4">
+          <h2 className="text-xl font-bold">Your Activity</h2>
+        </div>
+        <ActivityHeatmap />
       </section>
 
       {/* Main Content Layout */}

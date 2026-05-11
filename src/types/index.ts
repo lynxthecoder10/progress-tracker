@@ -82,7 +82,7 @@ export const ACHIEVEMENTS: Achievement[] = [
     type: 'contributor',
     name: 'Contributor',
     description: 'Strengthening the forge for others',
-    icon: 'HandHeart',
+    icon: 'Heart',
     color: 'from-blue-400 to-indigo-600',
     requirement: 'Shared a Resource'
   },

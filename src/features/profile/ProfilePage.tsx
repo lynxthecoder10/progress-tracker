@@ -6,13 +6,13 @@ import { motion } from 'framer-motion';
 import {
   Hammer, Zap, Brain, Flame, TrendingUp, Crown, Star,
   Shield, Calendar, Trophy, Lock, Mail, ArrowLeft,
-  GitBranch, Edit3, Check, X, ExternalLink, HandHeart, Swords
+  Heart, GitBranch, Edit3, Check, X, ExternalLink
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { useAppStore } from '../../store/appStore';
 
 const iconMap: Record<string, React.ElementType> = {
-  Hammer, Zap, Brain, Flame, HandHeart, TrendingUp, Crown, Swords
+  Hammer, Zap, Brain, Flame, Heart, TrendingUp, Crown
 };
 
 const BADGE_STYLES: Record<string, { bg: string; glow: string; ring: string }> = {

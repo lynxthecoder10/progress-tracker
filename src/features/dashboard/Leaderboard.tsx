@@ -11,6 +11,8 @@ interface LeaderboardEntry {
   xp: number;
   streak: number;
   trust_score: number;
+  ranking_score: number;
+  consistency_score: number;
 }
 
 export const Leaderboard: React.FC = () => {
@@ -24,19 +26,26 @@ export const Leaderboard: React.FC = () => {
   const fetchLeaderboard = async () => {
     setLoading(true);
     const { data, error } = await supabase
-      .from('users')
-      .select(`id, email, role, xp, streak, trust_score`)
-      .order('xp', { ascending: false })
+      .from('leaderboard_metrics')
+      .select(`
+        user_id,
+        ranking_score,
+        consistency_score,
+        users!inner(email, role, xp, streak, trust_score)
+      `)
+      .order('ranking_score', { ascending: false })
       .limit(10);
 
     if (!error && data) {
-      setLeaders(data.map(u => ({
-        user_id: u.id,
-        email: u.email,
-        role: u.role,
-        xp: u.xp,
-        streak: u.streak,
-        trust_score: u.trust_score,
+      setLeaders(data.map((row: any) => ({
+        user_id: row.user_id,
+        email: row.users.email,
+        role: row.users.role,
+        xp: row.users.xp,
+        streak: row.users.streak,
+        trust_score: row.users.trust_score,
+        ranking_score: row.ranking_score,
+        consistency_score: row.consistency_score,
       })));
     }
     setLoading(false);
@@ -101,13 +110,12 @@ export const Leaderboard: React.FC = () => {
                   </div>
 
                   <div className="text-right">
-                    <div className="flex items-center justify-end gap-2 text-blue-400 font-black text-xl italic tracking-tight">
-                      <TrendingUp size={16} className="text-blue-500/50" />
-                      {leader.xp.toLocaleString()} <span className="text-[10px] font-bold uppercase ml-1 opacity-50">XP</span>
+                    <div className="flex items-center justify-end gap-1.5 text-amber-400 font-black text-xl">
+                      <TrendingUp size={14} className="text-amber-500/60" />
+                      {leader.ranking_score}<span className="text-[10px] font-bold ml-1 opacity-50">pts</span>
                     </div>
-                    <div className="flex items-center justify-end gap-1.5 mt-1">
-                      <Shield size={10} className="text-green-500/50" />
-                      <span className="text-[10px] font-bold text-green-500/80 uppercase tracking-tighter">Trust Score: {leader.trust_score}</span>
+                    <div className="text-[10px] text-gray-600 font-bold mt-0.5">
+                      {leader.xp.toLocaleString()} XP · 🔥{leader.streak}d
                     </div>
                   </div>
                 </motion.div>

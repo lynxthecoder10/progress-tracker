@@ -52,6 +52,25 @@ export const DailyReportForm: React.FC = () => {
     name: "resources_used"
   });
 
+  const scoreReportQuality = (summary: string, topic: string, tasks: string[]): { score: number; reason?: string } => {
+    const wordCount = summary.trim().split(/\s+/).length;
+    const charCount = summary.length;
+
+    if (wordCount < 10)    return { score: 0, reason: 'Summary is too short. Describe your progress in detail (min 10 words).' };
+    if (charCount < 50)    return { score: 0, reason: 'Report is too brief. Add more detail to your progress summary.' };
+    if (tasks.length < 2)  return { score: 0, reason: 'Add at least 2 completed tasks to your report.' };
+    if (/test|n\/a|nothing|idk/i.test(topic)) return { score: 0, reason: 'Topic looks like a placeholder. Enter a real topic.' };
+
+    // Detect repeated words/phrases
+    const words = summary.toLowerCase().split(/\s+/);
+    const freq: Record<string, number> = {};
+    words.forEach(w => { freq[w] = (freq[w] || 0) + 1; });
+    const maxFreq = Math.max(...Object.values(freq));
+    if (maxFreq > words.length * 0.4) return { score: 0, reason: 'Repeated content detected. Write a genuine progress summary.' };
+
+    return { score: wordCount > 30 ? 100 : 70 };
+  };
+
   const onSubmit = async (data: DailyReportFormValues) => {
     if (!user) return;
     setIsSubmitting(true);
@@ -62,6 +81,12 @@ export const DailyReportForm: React.FC = () => {
       const tasks = data.tasks_completed.map(t => t.value);
       const resources = data.resources_used.map(r => r.value);
 
+      // Quality gate
+      const { score, reason } = scoreReportQuality(data.progress_summary, data.topic, tasks);
+      if (score === 0) {
+        throw new Error(reason || 'Report quality too low. Please improve your submission.');
+      }
+
       const { error } = await supabase
         .from('daily_reports')
         .insert({
@@ -70,7 +95,8 @@ export const DailyReportForm: React.FC = () => {
           progress_summary: data.progress_summary,
           tasks_completed: tasks,
           resources_used: resources,
-          date: new Date().toISOString().split('T')[0] // local current date YYYY-MM-DD
+          quality_score: score,
+          date: new Date().toISOString().split('T')[0]
         });
 
       if (error) {
@@ -81,7 +107,7 @@ export const DailyReportForm: React.FC = () => {
       }
 
       await awardXp(XP_VALUES.DAILY_REPORT, 'Daily report submitted');
-      addToast('Daily report submitted! +50 XP', 'success');
+      addToast(`Daily report submitted! +${XP_VALUES.DAILY_REPORT} XP`, 'success');
       navigate('/');
     } catch (err: any) {
       setSubmitError(err.message || 'Failed to submit report');
@@ -90,6 +116,7 @@ export const DailyReportForm: React.FC = () => {
       setIsSubmitting(false);
     }
   };
+
 
   return (
     <div className="min-h-screen bg-background p-6">

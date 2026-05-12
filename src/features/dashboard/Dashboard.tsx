@@ -149,7 +149,7 @@ export const Dashboard: React.FC = () => {
             <h2 className="text-2xl font-bold flex items-center gap-3">
               <Star className="text-yellow-500" /> Global Leaderboard
             </h2>
-            <Link to="/" className="text-blue-500 text-sm font-bold hover:underline">View All</Link>
+            <Link to="/leaderboard" className="text-blue-500 text-sm font-bold hover:underline">View All</Link>
           </div>
           <Leaderboard />
         </div>

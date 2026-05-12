@@ -38,14 +38,17 @@ export const QuizWidget: React.FC = () => {
     if (!user) return;
     setLoading(true);
 
-    const oneDayAgo = new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString();
+    // Get the start of the user's current local day
+    const startOfDay = new Date();
+    startOfDay.setHours(0, 0, 0, 0);
+    const todayString = startOfDay.toISOString();
 
     // Fetch today's attempts
     const { data: todayAttempts } = await supabase
       .from('quiz_attempts')
       .select('question_id, is_correct')
       .eq('user_id', user.id)
-      .gte('created_at', oneDayAgo);
+      .gte('created_at', todayString);
 
     const seenIds = todayAttempts?.map(a => a.question_id).filter(Boolean) as string[] ?? [];
     const correctCount = todayAttempts?.filter(a => a.is_correct).length ?? 0;
@@ -93,10 +96,11 @@ export const QuizWidget: React.FC = () => {
     const correct = index === currentQuestion.correct;
     setIsCorrect(correct);
 
-    // Record attempt with question_id
+    // Record attempt with question_id AND score (to satisfy DB constraint)
     await supabase.from('quiz_attempts').insert({
       user_id: user.id,
       quiz_id: null,
+      score: correct ? XP_PER_CORRECT : 0,
       is_correct: correct,
       question_id: currentQuestion.id,
     });

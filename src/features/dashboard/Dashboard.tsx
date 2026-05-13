@@ -1,4 +1,5 @@
 import React from 'react';
+import { supabase } from '../../lib/supabase';
 import { useAuthStore } from '../../store/authStore';
 import { Leaderboard } from './Leaderboard';
 import { QuizWidget } from '../quizzes/QuizWidget';
@@ -12,7 +13,9 @@ import { HelpTooltip } from '../../components/ui/HelpTooltip';
 import { InstallPWA } from '../../components/InstallPWA';
 
 export const Dashboard: React.FC = () => {
-  const { profile } = useAuthStore();
+  const { profile, updateProfile } = useAuthStore();
+  const [isEditingGoal, setIsEditingGoal] = React.useState(false);
+  const [goalInput, setGoalInput] = React.useState(profile?.daily_focus || '');
 
   const stats = [
     { 
@@ -45,7 +48,18 @@ export const Dashboard: React.FC = () => {
     },
   ];
 
-  // Also import Heart from lucide-react if needed
+  const handleSaveGoal = async () => {
+    if (!profile) return;
+    const { error } = await supabase
+      .from('users')
+      .update({ daily_focus: goalInput })
+      .eq('id', profile.id);
+    
+    if (!error) {
+      updateProfile({ daily_focus: goalInput });
+      setIsEditingGoal(false);
+    }
+  };
 
 
   return (
@@ -108,6 +122,41 @@ export const Dashboard: React.FC = () => {
             </div>
           </motion.div>
         </div>
+      </section>
+
+      {/* Daily Focus Goal */}
+      <section className="bg-white/5 border border-white/10 rounded-3xl p-6 md:p-8 flex flex-col md:flex-row items-center justify-between gap-6 relative overflow-hidden">
+        <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-r from-amber-500/5 to-transparent pointer-events-none" />
+        <div className="flex items-center gap-4 relative z-10">
+          <div className="p-4 bg-amber-500/10 rounded-2xl">
+            <Zap className="text-amber-500" size={24} />
+          </div>
+          <div>
+            <h3 className="text-sm font-black text-gray-500 uppercase tracking-widest">Today's Main Goal</h3>
+            {isEditingGoal ? (
+              <div className="flex items-center gap-2 mt-1">
+                <input 
+                  type="text" 
+                  value={goalInput} 
+                  onChange={e => setGoalInput(e.target.value)}
+                  className="bg-white/5 border border-amber-500/30 rounded-lg px-3 py-1.5 text-white outline-none focus:border-amber-500 w-full md:w-80"
+                  autoFocus
+                />
+                <button onClick={handleSaveGoal} className="px-3 py-1.5 bg-amber-600 rounded-lg text-xs font-bold">Save</button>
+              </div>
+            ) : (
+              <p className="text-xl font-black text-white mt-1">
+                {profile?.daily_focus || 'No focus goal set yet...'}
+              </p>
+            )}
+          </div>
+        </div>
+        <button 
+          onClick={() => setIsEditingGoal(!isEditingGoal)}
+          className="px-4 py-2 bg-white/5 hover:bg-white/10 rounded-xl text-xs font-black uppercase tracking-widest text-gray-400 transition-all z-10"
+        >
+          {isEditingGoal ? 'Cancel' : 'Edit Goal'}
+        </button>
       </section>
 
       {/* Stats Grid */}

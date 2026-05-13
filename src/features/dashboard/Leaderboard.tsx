@@ -14,6 +14,8 @@ interface LeaderboardEntry {
   ranking_score: number;
   consistency_score: number;
   avatar_url: string | null;
+  last_rank: number | null;
+  current_rank: number | null;
 }
 
 export const Leaderboard: React.FC = () => {
@@ -32,6 +34,8 @@ export const Leaderboard: React.FC = () => {
         user_id,
         ranking_score,
         consistency_score,
+        last_rank,
+        current_rank,
         users!inner(email, role, xp, streak, trust_score, avatar_url)
       `)
       .order('ranking_score', { ascending: false })
@@ -48,6 +52,8 @@ export const Leaderboard: React.FC = () => {
         ranking_score: row.ranking_score,
         consistency_score: row.consistency_score,
         avatar_url: row.users.avatar_url,
+        last_rank: row.last_rank,
+        current_rank: row.current_rank,
       })));
     }
     setLoading(false);
@@ -89,6 +95,23 @@ export const Leaderboard: React.FC = () => {
                         <div className="animate-bounce-subtle">{styles.medal}</div>
                       ) : (
                         <span className="text-lg font-black text-gray-600">#{index + 1}</span>
+                      )}
+                    </div>
+
+                    {/* Rank Movement */}
+                    <div className="flex flex-col items-center -ml-4 mr-2">
+                      {leader.last_rank && leader.current_rank && (
+                        <>
+                          {leader.last_rank > leader.current_rank && (
+                            <span className="text-green-500 text-[10px] font-bold">↑</span>
+                          )}
+                          {leader.last_rank < leader.current_rank && (
+                            <span className="text-red-500 text-[10px] font-bold">↓</span>
+                          )}
+                          {leader.last_rank === leader.current_rank && (
+                            <span className="text-gray-600 text-[10px]">•</span>
+                          )}
+                        </>
                       )}
                     </div>
                     

@@ -10,6 +10,10 @@ export interface UserProfile {
   contribution_points: number;
   github_username: string | null;
   avatar_url: string | null;
+  daily_focus: string | null;
+  last_activity_date: string | null;
+  is_banned: boolean;
+  ban_reason: string | null;
   created_at: string;
 }
 

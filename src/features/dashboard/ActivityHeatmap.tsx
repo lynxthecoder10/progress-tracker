@@ -34,17 +34,29 @@ export const ActivityHeatmap: React.FC = () => {
 
     const startDate = new Date();
     startDate.setDate(startDate.getDate() - DAYS_TO_SHOW);
+    const startDateStr = startDate.toISOString().split('T')[0];
 
-    const { data } = await supabase
-      .from('daily_reports')
-      .select('date')
-      .eq('user_id', user.id)
-      .gte('date', startDate.toISOString().split('T')[0]);
+    const [reportsRes, quizzesRes] = await Promise.all([
+      supabase
+        .from('daily_reports')
+        .select('date')
+        .eq('user_id', user.id)
+        .gte('date', startDateStr),
+      supabase
+        .from('quiz_attempts')
+        .select('timestamp')
+        .eq('user_id', user.id)
+        .gte('timestamp', startDateStr)
+    ]);
 
     // Count per date
     const counts: Record<string, number> = {};
-    data?.forEach(r => {
+    reportsRes.data?.forEach(r => {
       counts[r.date] = (counts[r.date] || 0) + 1;
+    });
+    quizzesRes.data?.forEach(q => {
+      const dateStr = q.timestamp.split('T')[0];
+      counts[dateStr] = (counts[dateStr] || 0) + 1;
     });
 
     // Build 91 day array

@@ -31,8 +31,9 @@ export const DailyReportForm: React.FC = () => {
   const navigate = useNavigate();
   const [submitError, setSubmitError] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const DRAFT_KEY = `daily_report_draft_${user?.id}`;
 
-  const { register, control, handleSubmit, formState: { errors } } = useForm<DailyReportFormValues>({
+  const { register, control, handleSubmit, formState: { errors }, watch, setValue, reset } = useForm<DailyReportFormValues>({
     resolver: zodResolver(dailyReportSchema),
     defaultValues: {
       topic: '',
@@ -41,6 +42,27 @@ export const DailyReportForm: React.FC = () => {
       resources_used: [{ value: '' }],
     }
   });
+
+  // Load draft
+  React.useEffect(() => {
+    const saved = localStorage.getItem(DRAFT_KEY);
+    if (saved) {
+      try {
+        const draft = JSON.parse(saved);
+        reset(draft);
+      } catch (e) {
+        console.error('Failed to load draft');
+      }
+    }
+  }, [reset, DRAFT_KEY]);
+
+  // Save draft on change
+  const formValues = watch();
+  React.useEffect(() => {
+    if (Object.keys(formValues).length > 0) {
+      localStorage.setItem(DRAFT_KEY, JSON.stringify(formValues));
+    }
+  }, [formValues, DRAFT_KEY]);
 
   const { fields: taskFields, append: appendTask, remove: removeTask } = useFieldArray({
     control,
@@ -107,6 +129,7 @@ export const DailyReportForm: React.FC = () => {
       }
 
       await awardXp(XP_VALUES.DAILY_REPORT, 'Daily report submitted');
+      localStorage.removeItem(DRAFT_KEY); // Clear draft on success
       addToast(`Daily report submitted! +${XP_VALUES.DAILY_REPORT} XP`, 'success');
       navigate('/');
     } catch (err: any) {

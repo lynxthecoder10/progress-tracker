@@ -4,6 +4,7 @@ import { Card, CardContent } from '../../components/ui/Card';
 import { Trophy, Medal, Flame, TrendingUp, Shield, ArrowLeft } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
+import { HelpTooltip } from '../../components/ui/HelpTooltip';
 
 interface LeaderboardEntry {
   user_id: string;
@@ -14,6 +15,7 @@ interface LeaderboardEntry {
   trust_score: number;
   ranking_score: number;
   consistency_score: number;
+  avatar_url: string | null;
 }
 
 export const LeaderboardPage: React.FC = () => {
@@ -32,7 +34,7 @@ export const LeaderboardPage: React.FC = () => {
         user_id,
         ranking_score,
         consistency_score,
-        users!inner(email, role, xp, streak, trust_score)
+        users!inner(email, role, xp, streak, trust_score, avatar_url)
       `)
       .order('ranking_score', { ascending: false });
 
@@ -46,6 +48,7 @@ export const LeaderboardPage: React.FC = () => {
         trust_score: row.users.trust_score,
         ranking_score: row.ranking_score,
         consistency_score: row.consistency_score,
+        avatar_url: row.users.avatar_url,
       })));
     }
     setLoading(false);
@@ -72,10 +75,30 @@ export const LeaderboardPage: React.FC = () => {
           <Trophy className="text-yellow-500" size={32} />
         </div>
         <div>
-          <h1 className="text-3xl font-black text-white">Global Leaderboard</h1>
+          <h1 className="text-3xl font-black text-white flex items-center gap-3">
+            Global Leaderboard
+            <HelpTooltip 
+              title="How Ranking Works" 
+              content="Ranking is based on a weighted Score: XP (40%) + Consistency (30%) + Contributions (20%) + Trust (10%). High activity and quality reporting boost your rank faster than raw XP alone."
+            />
+          </h1>
           <p className="text-gray-400">The most consistent and active members of the forge.</p>
         </div>
       </div>
+
+      {/* Explanation Card */}
+      <Card className="border-blue-500/20 bg-blue-500/5 backdrop-blur-xl">
+        <CardContent className="p-6 text-sm text-blue-200/80 leading-relaxed">
+          <div className="flex items-start gap-4">
+            <TrendingUp className="text-blue-400 shrink-0 mt-1" size={20} />
+            <p>
+              The <strong>Forge Leaderboard</strong> isn't just about total points. It rewards <strong>character</strong>. 
+              Gaining XP through quizzes and tasks is important, but maintaining a daily streak and submitting 
+              high-quality monthly reports is what truly defines a Leader. Consistent contributors shape the forge for everyone.
+            </p>
+          </div>
+        </CardContent>
+      </Card>
 
       <Card className="border-white/10 bg-[#121214]/50 backdrop-blur-xl overflow-hidden shadow-2xl">
         <CardContent className="p-0">
@@ -107,8 +130,12 @@ export const LeaderboardPage: React.FC = () => {
                       </div>
                       
                       <div className="flex items-center gap-4">
-                        <div className={`w-14 h-14 rounded-2xl bg-gradient-to-br from-blue-500/20 to-purple-500/20 border ${index < 3 ? styles.border : 'border-white/10'} flex items-center justify-center text-2xl font-bold text-white shadow-inner`}>
-                          {leader.email[0].toUpperCase()}
+                        <div className={`w-14 h-14 rounded-2xl bg-gradient-to-br from-zinc-800 to-zinc-900 border ${index < 3 ? styles.border : 'border-white/10'} flex items-center justify-center text-2xl font-bold text-white shadow-inner overflow-hidden`}>
+                          {leader.avatar_url ? (
+                            <img src={leader.avatar_url} alt="Avatar" className="w-full h-full object-cover" />
+                          ) : (
+                            leader.email[0].toUpperCase()
+                          )}
                         </div>
                         <div>
                           <div className="flex items-center gap-2">

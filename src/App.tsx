@@ -11,6 +11,8 @@ import { ResourcesPage } from './features/resources/ResourcesPage';
 import { AdminDashboard } from './features/admin/AdminDashboard';
 import { ProfilePage } from './features/profile/ProfilePage';
 import { LeaderboardPage } from './features/leaderboard/LeaderboardPage';
+import { FeedbackPage } from './features/feedback/FeedbackPage';
+import { BattlesPage } from './features/battles/BattlesPage';
 import { ToastContainer } from './components/ui/Toast';
 import { MainLayout } from './components/layout/MainLayout';
 
@@ -87,6 +89,8 @@ function App() {
           <Route path="/admin" element={<ProtectedRoute><AdminDashboard /></ProtectedRoute>} />
           <Route path="/profile" element={<ProtectedRoute><ProfilePage /></ProtectedRoute>} />
           <Route path="/leaderboard" element={<ProtectedRoute><LeaderboardPage /></ProtectedRoute>} />
+          <Route path="/feedback" element={<ProtectedRoute><FeedbackPage /></ProtectedRoute>} />
+          <Route path="/battles" element={<ProtectedRoute><BattlesPage /></ProtectedRoute>} />
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </MainLayout>

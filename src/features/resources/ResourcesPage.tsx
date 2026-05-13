@@ -11,6 +11,7 @@ import { Input } from '../../components/ui/Input';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../../components/ui/Card';
 import { Video, Code, FileText, GraduationCap, Link as LinkIcon, ThumbsUp, Search, Plus, ExternalLink, Tag } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { HelpTooltip } from '../../components/ui/HelpTooltip';
 
 const resourceSchema = z.object({
   title: z.string().min(5, "Title is too short").max(100),
@@ -135,7 +136,13 @@ export const ResourcesPage: React.FC = () => {
       {/* Header Section */}
       <section className="flex flex-col md:flex-row md:items-center justify-between gap-6">
         <div className="space-y-1">
-          <h1 className="text-4xl font-black tracking-tight text-white">Resource Hub</h1>
+          <h1 className="text-4xl font-black tracking-tight text-white flex items-center gap-3">
+            Resource Hub
+            <HelpTooltip 
+              title="Sharing Knowledge" 
+              content="The Hub is our collective library. Sharing unique, high-quality links earns you XP and builds the community's knowledge base. Use tags to help others find your links!" 
+            />
+          </h1>
           <p className="text-gray-500 font-medium">Curated learning materials shared by the team.</p>
         </div>
         

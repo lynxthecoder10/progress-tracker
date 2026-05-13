@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { LayoutDashboard, BookOpen, FileText, LogOut, User, Bell, ShieldCheck, CheckCircle, AlertTriangle, Zap, Hammer } from 'lucide-react';
+import { LayoutDashboard, BookOpen, FileText, LogOut, User, Bell, ShieldCheck, CheckCircle, AlertTriangle, Zap, Hammer, Swords, MessageSquare } from 'lucide-react';
 import { useAuthStore } from '../../store/authStore';
 import { supabase } from '../../lib/supabase';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -48,9 +48,11 @@ export const Navbar: React.FC = () => {
   };
 
   const navItems = [
-    { name: 'Dashboard', path: '/', icon: LayoutDashboard },
-    { name: 'Resources', path: '/resources', icon: BookOpen },
-    { name: 'Reports', path: '/reports', icon: FileText },
+    { name: 'Home', path: '/', icon: LayoutDashboard },
+    { name: 'Books', path: '/resources', icon: BookOpen },
+    { name: 'Logs', path: '/reports', icon: FileText },
+    { name: 'Battles', path: '/battles', icon: Swords },
+    { name: 'Help', path: '/feedback', icon: MessageSquare },
   ];
 
   if (profile?.role === 'admin') {
@@ -177,9 +179,13 @@ export const Navbar: React.FC = () => {
             </div>
             <Link 
               to="/profile"
-              className="w-12 h-12 rounded-2xl bg-gradient-to-br from-white/10 to-white/5 border border-white/10 flex items-center justify-center shadow-inner group cursor-pointer hover:border-amber-500/50 transition-all"
+              className="w-12 h-12 rounded-2xl bg-gradient-to-br from-white/10 to-white/5 border border-white/10 flex items-center justify-center shadow-inner group cursor-pointer hover:border-amber-500/50 transition-all overflow-hidden"
             >
-               <User size={24} className="text-gray-400 group-hover:text-amber-400 transition-colors" />
+              {profile?.avatar_url ? (
+                <img src={profile.avatar_url} alt="Avatar" className="w-full h-full object-cover" />
+              ) : (
+                <User size={24} className="text-gray-400 group-hover:text-amber-400 transition-colors" />
+              )}
             </Link>
             <button 
               onClick={handleSignOut}

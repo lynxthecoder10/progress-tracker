@@ -13,6 +13,7 @@ interface LeaderboardEntry {
   trust_score: number;
   ranking_score: number;
   consistency_score: number;
+  avatar_url: string | null;
 }
 
 export const Leaderboard: React.FC = () => {
@@ -31,7 +32,7 @@ export const Leaderboard: React.FC = () => {
         user_id,
         ranking_score,
         consistency_score,
-        users!inner(email, role, xp, streak, trust_score)
+        users!inner(email, role, xp, streak, trust_score, avatar_url)
       `)
       .order('ranking_score', { ascending: false })
       .limit(10);
@@ -46,6 +47,7 @@ export const Leaderboard: React.FC = () => {
         trust_score: row.users.trust_score,
         ranking_score: row.ranking_score,
         consistency_score: row.consistency_score,
+        avatar_url: row.users.avatar_url,
       })));
     }
     setLoading(false);
@@ -91,8 +93,12 @@ export const Leaderboard: React.FC = () => {
                     </div>
                     
                     <div className="flex items-center gap-4">
-                      <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-blue-500/20 to-purple-500/20 border border-white/10 flex items-center justify-center text-xl font-bold text-white shadow-inner">
-                        {leader.email[0].toUpperCase()}
+                      <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-zinc-800 to-zinc-900 border border-white/10 flex items-center justify-center text-xl font-bold text-white shadow-inner overflow-hidden">
+                        {leader.avatar_url ? (
+                          <img src={leader.avatar_url} alt="Avatar" className="w-full h-full object-cover" />
+                        ) : (
+                          leader.email[0].toUpperCase()
+                        )}
                       </div>
                       <div>
                         <div className="flex items-center gap-2">

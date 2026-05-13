@@ -1,11 +1,14 @@
 import React, { useState } from 'react';
 import { DailyReportForm } from './DailyReportForm';
 import { WeeklyReportForm } from './WeeklyReportForm';
+import { MonthlyReportForm } from './MonthlyReportForm';
+import { CommunityFeed } from './CommunityFeed';
 import { motion, AnimatePresence } from 'framer-motion';
-import { FileText, Calendar, Info, Clock, AlertCircle } from 'lucide-react';
+import { FileText, Calendar, Info, Clock, AlertCircle, Users, Globe } from 'lucide-react';
+import { HelpTooltip } from '../../components/ui/HelpTooltip';
 
 export const ReportsPage: React.FC = () => {
-  const [activeTab, setActiveTab] = useState<'daily' | 'weekly'>('daily');
+  const [activeTab, setActiveTab] = useState<'daily' | 'weekly' | 'monthly' | 'community'>('daily');
 
   return (
     <div className="p-4 md:p-8 max-w-4xl mx-auto space-y-8 min-h-screen">
@@ -13,39 +16,21 @@ export const ReportsPage: React.FC = () => {
         <h1 className="text-4xl font-black tracking-tight text-white flex items-center gap-4">
           <FileText className="text-blue-500" size={36} />
           Progress Reporting
+          <HelpTooltip 
+            title="Why Report?" 
+            content="Documentation is the forge of consistency. Reporting your progress daily, weekly, and monthly builds your Trust Score and earns you XP." 
+          />
         </h1>
         <p className="text-gray-500 font-medium">Document your journey and maintain your streak.</p>
       </header>
 
-      {/* Stats/Info Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <div className="p-4 rounded-2xl bg-blue-500/10 border border-blue-500/20 flex items-start gap-4">
-          <div className="p-2 bg-blue-500/20 rounded-xl text-blue-400">
-            <Info size={20} />
-          </div>
-          <div>
-            <h4 className="text-sm font-bold text-blue-400">Daily Goal</h4>
-            <p className="text-xs text-blue-100/60 leading-relaxed">Submit your daily activity to maintain your streak. Required by 11:59 PM local time.</p>
-          </div>
-        </div>
-        <div className="p-4 rounded-2xl bg-purple-500/10 border border-purple-500/20 flex items-start gap-4">
-          <div className="p-2 bg-purple-500/20 rounded-xl text-purple-400">
-            <Calendar size={20} />
-          </div>
-          <div>
-            <h4 className="text-sm font-bold text-purple-400">Weekly Review</h4>
-            <p className="text-xs text-purple-100/60 leading-relaxed">Summarize your week every Sunday. This significantly boosts your Trust Score.</p>
-          </div>
-        </div>
-      </div>
-
       {/* Custom Tab Switcher */}
-      <div className="flex p-1 bg-white/5 rounded-2xl border border-white/10 w-full max-w-md mx-auto">
+      <div className="flex flex-wrap p-1 bg-white/5 rounded-2xl border border-white/10 w-full overflow-hidden">
         <button
           onClick={() => setActiveTab('daily')}
-          className={`flex-1 flex items-center justify-center gap-2 py-3 rounded-xl font-bold transition-all ${
+          className={`flex-1 flex items-center justify-center gap-2 py-3 px-4 rounded-xl font-bold transition-all ${
             activeTab === 'daily' 
-              ? 'bg-blue-600 text-white shadow-lg shadow-blue-600/20' 
+              ? 'bg-blue-600 text-white shadow-lg' 
               : 'text-gray-500 hover:text-gray-300'
           }`}
         >
@@ -53,38 +38,57 @@ export const ReportsPage: React.FC = () => {
         </button>
         <button
           onClick={() => setActiveTab('weekly')}
-          className={`flex-1 flex items-center justify-center gap-2 py-3 rounded-xl font-bold transition-all ${
+          className={`flex-1 flex items-center justify-center gap-2 py-3 px-4 rounded-xl font-bold transition-all ${
             activeTab === 'weekly' 
-              ? 'bg-blue-600 text-white shadow-lg shadow-blue-600/20' 
+              ? 'bg-blue-600 text-white shadow-lg' 
               : 'text-gray-500 hover:text-gray-300'
           }`}
         >
           <Calendar size={18} /> Weekly
+        </button>
+        <button
+          onClick={() => setActiveTab('monthly')}
+          className={`flex-1 flex items-center justify-center gap-2 py-3 px-4 rounded-xl font-bold transition-all ${
+            activeTab === 'monthly' 
+              ? 'bg-blue-600 text-white shadow-lg' 
+              : 'text-gray-500 hover:text-gray-300'
+          }`}
+        >
+          <Users size={18} /> Monthly
+        </button>
+        <button
+          onClick={() => setActiveTab('community')}
+          className={`flex-1 flex items-center justify-center gap-2 py-3 px-4 rounded-xl font-bold transition-all ${
+            activeTab === 'community' 
+              ? 'bg-emerald-600 text-white shadow-lg' 
+              : 'text-gray-500 hover:text-gray-300'
+          }`}
+        >
+          <Globe size={18} /> Community
         </button>
       </div>
 
       {/* Form Section with Transitions */}
       <div className="relative">
         <AnimatePresence mode="wait">
-          {activeTab === 'daily' ? (
-            <motion.div
-              key="daily"
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -20 }}
-              transition={{ duration: 0.3 }}
-            >
+          {activeTab === 'daily' && (
+            <motion.div key="daily" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }}>
               <DailyReportForm />
             </motion.div>
-          ) : (
-            <motion.div
-              key="weekly"
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -20 }}
-              transition={{ duration: 0.3 }}
-            >
+          )}
+          {activeTab === 'weekly' && (
+            <motion.div key="weekly" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }}>
               <WeeklyReportForm />
+            </motion.div>
+          )}
+          {activeTab === 'monthly' && (
+            <motion.div key="monthly" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }}>
+              <MonthlyReportForm />
+            </motion.div>
+          )}
+          {activeTab === 'community' && (
+            <motion.div key="community" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }}>
+              <CommunityFeed />
             </motion.div>
           )}
         </AnimatePresence>

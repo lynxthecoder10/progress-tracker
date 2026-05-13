@@ -9,6 +9,7 @@ export interface UserProfile {
   trust_score: number;
   contribution_points: number;
   github_username: string | null;
+  avatar_url: string | null;
   created_at: string;
 }
 

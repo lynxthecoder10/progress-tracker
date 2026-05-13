@@ -6,9 +6,9 @@ import { WarningsWidget } from './WarningsWidget';
 import { motion } from 'framer-motion';
 import { Zap, Flame, Shield, User, ChevronRight, Star, Heart, Hammer } from 'lucide-react';
 import { Link } from 'react-router-dom';
-import { InstallPWA } from '../../components/InstallPWA';
 import { ActivityHeatmap } from './ActivityHeatmap';
 import { getRankTitle, getRankColor } from '../../types';
+import { HelpTooltip } from '../../components/ui/HelpTooltip';
 
 export const Dashboard: React.FC = () => {
   const { profile } = useAuthStore();
@@ -136,7 +136,13 @@ export const Dashboard: React.FC = () => {
       {/* Activity Heatmap */}
       <section>
         <div className="flex items-center justify-between mb-4">
-          <h2 className="text-xl font-bold">Your Activity</h2>
+          <h2 className="text-xl font-bold flex items-center">
+            Your Activity
+            <HelpTooltip 
+              title="Activity Heatmap" 
+              content="This heatmap shows your daily report submission consistency. Darker squares indicate successful reporting. Maintain a streak to increase your XP multipliers!" 
+            />
+          </h2>
         </div>
         <ActivityHeatmap />
       </section>
@@ -147,7 +153,12 @@ export const Dashboard: React.FC = () => {
         <div className="lg:col-span-2 space-y-8">
           <div className="flex items-center justify-between">
             <h2 className="text-2xl font-bold flex items-center gap-3">
-              <Star className="text-yellow-500" /> Global Leaderboard
+              <Star className="text-yellow-500" /> 
+              Global Leaderboard
+              <HelpTooltip 
+                title="Leaderboard" 
+                content="The leaderboard ranks members by their Forge Score. High rank unlocks exclusive rewards and system authority." 
+              />
             </h2>
             <Link to="/leaderboard" className="text-blue-500 text-sm font-bold hover:underline">View All</Link>
           </div>
@@ -157,7 +168,13 @@ export const Dashboard: React.FC = () => {
         {/* Widgets take 1 column */}
         <div className="space-y-8">
           <div className="flex items-center gap-3">
-            <h2 className="text-2xl font-bold">Daily Activities</h2>
+            <h2 className="text-2xl font-bold flex items-center">
+              Daily Activities
+              <HelpTooltip 
+                title="Daily Forge Tasks" 
+                content="Complete these daily to stay ahead. Quizzes test your knowledge, while Tasks test your execution. Warnings show if you are deviating from the Forge rules." 
+              />
+            </h2>
           </div>
           <div className="space-y-6">
              <QuizWidget />

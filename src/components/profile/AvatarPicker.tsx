@@ -8,11 +8,11 @@ import { Button } from '../ui/Button';
 
 const AVATARS = {
   male: [
-    { name: 'Warrior', url: 'https://api.dicebear.com/7.x/adventurer/svg?seed=Felix&backgroundColor=b6e3f4' },
-    { name: 'Knight', url: 'https://api.dicebear.com/7.x/adventurer/svg?seed=Buster&backgroundColor=c0aede' },
-    { name: 'Mage', url: 'https://api.dicebear.com/7.x/adventurer/svg?seed=Jasper&backgroundColor=ffdfbf' },
-    { name: 'Rogue', url: 'https://api.dicebear.com/7.x/adventurer/svg?seed=Milo&backgroundColor=d1d4f9' },
-    { name: 'Paladin', url: 'https://api.dicebear.com/7.x/adventurer/svg?seed=Finn&backgroundColor=ffd5dc' },
+    { name: 'Warrior', url: 'https://api.dicebear.com/7.x/adventurer/svg?seed=Jack&backgroundColor=b6e3f4' },
+    { name: 'Knight', url: 'https://api.dicebear.com/7.x/adventurer/svg?seed=Leo&backgroundColor=c0aede' },
+    { name: 'Mage', url: 'https://api.dicebear.com/7.x/adventurer/svg?seed=Max&backgroundColor=ffdfbf' },
+    { name: 'Rogue', url: 'https://api.dicebear.com/7.x/adventurer/svg?seed=Dave&backgroundColor=d1d4f9' },
+    { name: 'Paladin', url: 'https://api.dicebear.com/7.x/adventurer/svg?seed=George&backgroundColor=ffd5dc' },
   ],
   female: [
     { name: 'Archer', url: 'https://api.dicebear.com/7.x/adventurer/svg?seed=Anya&backgroundColor=b6e3f4' },

@@ -137,7 +137,7 @@ export const AvatarPicker: React.FC<AvatarPickerProps> = ({ onClose }) => {
               <div className="grid grid-cols-5 gap-4">
                 {AVATARS.male.map((avatar) => (
                   <button
-                    key={avatar.seed}
+                    key={avatar.name}
                     onClick={() => handleSelectDefault(avatar.url)}
                     className={`relative group p-1 rounded-2xl border-2 transition-all ${
                       selectedUrl === avatar.url ? 'border-blue-500 bg-blue-500/10' : 'border-transparent hover:border-white/10'
@@ -162,7 +162,7 @@ export const AvatarPicker: React.FC<AvatarPickerProps> = ({ onClose }) => {
               <div className="grid grid-cols-5 gap-4">
                 {AVATARS.female.map((avatar) => (
                   <button
-                    key={avatar.seed}
+                    key={avatar.name}
                     onClick={() => handleSelectDefault(avatar.url)}
                     className={`relative group p-1 rounded-2xl border-2 transition-all ${
                       selectedUrl === avatar.url ? 'border-pink-500 bg-pink-500/10' : 'border-transparent hover:border-white/10'

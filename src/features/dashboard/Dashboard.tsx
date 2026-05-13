@@ -9,6 +9,7 @@ import { Link } from 'react-router-dom';
 import { ActivityHeatmap } from './ActivityHeatmap';
 import { getRankTitle, getRankColor } from '../../types';
 import { HelpTooltip } from '../../components/ui/HelpTooltip';
+import { InstallPWA } from '../../components/InstallPWA';
 
 export const Dashboard: React.FC = () => {
   const { profile } = useAuthStore();

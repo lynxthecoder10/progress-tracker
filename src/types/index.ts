@@ -3,6 +3,8 @@ export type Role = 'admin' | 'member' | 'pending';
 export interface UserProfile {
   id: string;
   email: string;
+  username: string | null;
+  full_name: string | null;
   role: Role;
   xp: number;
   streak: number;

@@ -18,8 +18,8 @@ interface Battle {
   start_date: string;
   end_date: string;
   winner_id: string | null;
-  challenger: { email: string; xp: number };
-  opponent: { email: string; xp: number };
+  challenger: { email: string; xp: number; username: string | null };
+  opponent: { email: string; xp: number; username: string | null };
 }
 
 export const BattlesPage: React.FC = () => {
@@ -38,8 +38,8 @@ export const BattlesPage: React.FC = () => {
       .from('battles')
       .select(`
         *,
-        challenger:users!challenger_id(email, xp),
-        opponent:users!opponent_id(email, xp)
+        challenger:users!challenger_id(email, xp, username),
+        opponent:users!opponent_id(email, xp, username)
       `)
       .or(`challenger_id.eq.${user.id},opponent_id.eq.${user.id}`)
       .order('created_at', { ascending: false });
@@ -241,8 +241,9 @@ export const BattlesPage: React.FC = () => {
         ) : (
           <div className="grid gap-4">
             {battles.map((battle) => {
-              const isChallenger = battle.challenger_id === user?.id;
-              const opponentEmail = isChallenger ? battle.opponent.email : battle.challenger.email;
+               const isChallenger = battle.challenger_id === user?.id;
+               const opponent = isChallenger ? battle.opponent : battle.challenger;
+               const opponentEmail = opponent.email;
               const myGain = isChallenger 
                 ? battle.challenger.xp - battle.challenger_start_xp 
                 : battle.opponent.xp - battle.opponent_start_xp;
@@ -263,7 +264,7 @@ export const BattlesPage: React.FC = () => {
                     </div>
                     <div>
                       <h3 className="font-bold text-lg">
-                        {isChallenger ? 'You challenged' : 'Challenged by'} <span className="text-blue-400">{opponentEmail.split('@')[0]}</span>
+                        {isChallenger ? 'You challenged' : 'Challenged by'} <span className="text-blue-400">{opponent?.username || opponentEmail.split('@')[0]}</span>
                       </h3>
                       <div className="flex items-center gap-2 text-sm text-gray-400 mt-1">
                         <Clock size={14} /> 

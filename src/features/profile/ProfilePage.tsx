@@ -41,6 +41,8 @@ export const ProfilePage: React.FC = () => {
   // GitHub edit state
   const [editingGithub, setEditingGithub] = useState(false);
   const [githubInput, setGithubInput] = useState('');
+  const [usernameInput, setUsernameInput] = useState('');
+  const [editingUsername, setEditingUsername] = useState(false);
   const [savingGithub, setSavingGithub] = useState(false);
   const [showAvatarPicker, setShowAvatarPicker] = useState(false);
 
@@ -48,6 +50,7 @@ export const ProfilePage: React.FC = () => {
     if (profile) {
       fetchBadges();
       setGithubInput(profile.github_username ?? '');
+      setUsernameInput(profile.username ?? '');
     }
   }, [profile]);
 
@@ -76,6 +79,27 @@ export const ProfilePage: React.FC = () => {
       addToast('Failed to save. Try again.', 'error');
     }
     setSavingGithub(false);
+  };
+
+  const saveUsername = async () => {
+    if (!profile) return;
+    if (usernameInput.length < 3) {
+      addToast('Username must be at least 3 characters', 'error');
+      return;
+    }
+    const { error } = await supabase
+      .from('users')
+      .update({ username: usernameInput.trim() })
+      .eq('id', profile.id);
+
+    if (!error) {
+      updateProfile({ username: usernameInput.trim() });
+      addToast('Username updated!', 'success');
+      setEditingUsername(false);
+    } else {
+      if (error.code === '23505') addToast('Username already taken', 'error');
+      else addToast('Failed to save username', 'error');
+    }
   };
 
   const isUnlocked = (type: string) => badges.includes(type);
@@ -116,8 +140,26 @@ export const ProfilePage: React.FC = () => {
             
             <div className="flex-1 min-w-0">
               <div className="flex items-center gap-3">
-                <h1 className="text-4xl font-black truncate tracking-tight">
-                  {profile?.email?.split('@')[0]}
+                <h1 className="text-4xl font-black truncate tracking-tight flex items-center gap-2">
+                  {editingUsername ? (
+                    <div className="flex items-center gap-2">
+                      <input 
+                        value={usernameInput}
+                        onChange={e => setUsernameInput(e.target.value)}
+                        className="bg-white/5 border-b border-amber-500 outline-none text-2xl font-black w-48"
+                        autoFocus
+                      />
+                      <button onClick={saveUsername} className="p-1 bg-green-500/20 text-green-400 rounded-md"><Check size={16} /></button>
+                      <button onClick={() => setEditingUsername(false)} className="p-1 bg-red-500/20 text-red-400 rounded-md"><X size={16} /></button>
+                    </div>
+                  ) : (
+                    <>
+                      {profile?.username || profile?.email?.split('@')[0]}
+                      <button onClick={() => setEditingUsername(true)} className="p-1 text-gray-500 hover:text-white transition-colors">
+                        <Edit3 size={16} />
+                      </button>
+                    </>
+                  )}
                 </h1>
                 <span className="text-[10px] font-black bg-white/5 border border-white/10 px-3 py-1 rounded-full text-gray-500 uppercase tracking-widest">
                   LVL {Math.floor((profile?.xp || 0) / 100) + 1}

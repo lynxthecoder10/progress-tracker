@@ -14,7 +14,7 @@ interface MonthlyReport {
   quality_score: number;
   is_featured: boolean;
   created_at: string;
-  users: { email: string; role: string; xp: number };
+  users: { email: string; role: string; xp: number; username: string | null };
 }
 
 export const CommunityFeed: React.FC = () => {
@@ -44,7 +44,7 @@ export const CommunityFeed: React.FC = () => {
       .from('monthly_reports')
       .select(`
         *,
-        users:users(email, role, xp)
+        users:users(email, role, xp, username)
       `)
       .order('created_at', { ascending: false });
 
@@ -128,7 +128,7 @@ export const CommunityFeed: React.FC = () => {
                       {report.users.email[0].toUpperCase()}
                     </div>
                     <div className="text-center">
-                      <p className="font-bold text-gray-200">{report.users.email.split('@')[0]}</p>
+                      <p className="font-bold text-gray-200">{report.users.username || report.users.email.split('@')[0]}</p>
                       <p className="text-[10px] font-black uppercase tracking-widest text-gray-600">{report.users.role}</p>
                     </div>
                   </div>

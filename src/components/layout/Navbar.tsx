@@ -169,7 +169,7 @@ export const Navbar: React.FC = () => {
           
           <div className="flex items-center gap-4 pl-6 border-l border-white/10">
             <div className="text-right">
-              <p className="text-sm font-black text-white">{profile?.email?.split('@')[0]}</p>
+              <p className="text-sm font-black text-white">{profile?.username || profile?.email?.split('@')[0]}</p>
               <div className="flex items-center justify-end gap-1.5">
                 <div className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse" />
                 <p className={`text-[10px] font-bold uppercase tracking-widest ${getRankColor(profile?.xp || 0)}`}>

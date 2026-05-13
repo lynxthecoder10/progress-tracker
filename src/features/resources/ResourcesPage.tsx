@@ -268,7 +268,7 @@ export const ResourcesPage: React.FC = () => {
                             <div className="w-5 h-5 rounded-full bg-blue-500/20 flex items-center justify-center font-bold text-[10px]">
                               {resource.users?.email?.[0].toUpperCase()}
                             </div>
-                            <span>{resource.users?.email?.split('@')[0]}</span>
+                            <span>{resource.users?.username || resource.users?.email?.split('@')[0]}</span>
                             <span>•</span>
                             <span className="capitalize">{resource.type}</span>
                           </div>

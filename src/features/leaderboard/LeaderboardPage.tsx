@@ -16,6 +16,9 @@ interface LeaderboardEntry {
   ranking_score: number;
   consistency_score: number;
   avatar_url: string | null;
+  username: string | null;
+  last_rank: number | null;
+  current_rank: number | null;
 }
 
 export const LeaderboardPage: React.FC = () => {
@@ -34,7 +37,9 @@ export const LeaderboardPage: React.FC = () => {
         user_id,
         ranking_score,
         consistency_score,
-        users!inner(email, role, xp, streak, trust_score, avatar_url)
+        last_rank,
+        current_rank,
+        users!inner(email, role, xp, streak, trust_score, avatar_url, username)
       `)
       .order('ranking_score', { ascending: false });
 
@@ -49,6 +54,9 @@ export const LeaderboardPage: React.FC = () => {
         ranking_score: row.ranking_score,
         consistency_score: row.consistency_score,
         avatar_url: row.users.avatar_url,
+        username: row.users.username,
+        last_rank: row.last_rank,
+        current_rank: row.current_rank,
       })));
     }
     setLoading(false);
@@ -140,7 +148,7 @@ export const LeaderboardPage: React.FC = () => {
                         <div>
                           <div className="flex items-center gap-2">
                             <p className={`font-bold text-lg group-hover:text-white transition-colors ${index < 3 ? 'text-white' : 'text-gray-200'}`}>
-                              {leader.email.split('@')[0]}
+                              {leader.username || leader.email.split('@')[0]}
                             </p>
                             {leader.streak > 5 && <Flame size={16} className="text-orange-500" />}
                           </div>

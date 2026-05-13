@@ -199,7 +199,7 @@ export const AdminDashboard: React.FC = () => {
                   <div className="flex items-start justify-between gap-4">
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center gap-2 flex-wrap">
-                        <span className="font-bold text-white">{r.users?.email?.split('@')[0]}</span>
+                        <span className="font-bold text-white">{r.users?.username || r.users?.email?.split('@')[0]}</span>
                         <span className={`text-[9px] font-black uppercase tracking-widest px-2 py-0.5 rounded-full ${
                           r.status === 'approved' ? 'bg-green-500/15 text-green-400'
                           : r.status === 'rejected' ? 'bg-red-500/15 text-red-400'
@@ -246,10 +246,10 @@ export const AdminDashboard: React.FC = () => {
                   className="bg-white/5 border border-white/10 rounded-2xl p-5 flex items-center gap-4 flex-wrap"
                 >
                   <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-purple-500/30 to-blue-500/20 flex items-center justify-center font-black text-white shrink-0">
-                    {u.email[0].toUpperCase()}
+                    {(u.username || u.email)[0].toUpperCase()}
                   </div>
                   <div className="flex-1 min-w-0">
-                    <p className="font-bold text-white">{u.email.split('@')[0]}</p>
+                    <p className="font-bold text-white">{u.username || u.email.split('@')[0]}</p>
                     <p className="text-[10px] text-gray-500 font-black uppercase tracking-widest">{u.role} · {u.xp} XP · Trust: {u.trust_score}</p>
                   </div>
                   {/* Manual XP */}
@@ -294,8 +294,8 @@ export const AdminDashboard: React.FC = () => {
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2 flex-wrap">
                       <span className="text-xs font-black text-amber-400 uppercase">{log.action.replace(/_/g, ' ')}</span>
-                      <span className="text-[10px] text-gray-600">by {log.admin?.email?.split('@')[0] || 'system'}</span>
-                      <span className="text-[10px] text-gray-600">→ {log.target?.email?.split('@')[0]}</span>
+                      <span className="text-[10px] text-gray-600">by {log.admin?.username || log.admin?.email?.split('@')[0] || 'system'}</span>
+                      <span className="text-[10px] text-gray-600">→ {log.target?.username || log.target?.email?.split('@')[0]}</span>
                     </div>
                     {log.details && <p className="text-[10px] text-gray-500 mt-0.5 font-mono">{JSON.stringify(log.details)}</p>}
                   </div>
